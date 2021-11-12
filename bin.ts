@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import { exec, spawn } from 'child_process';
 import { readdir, readFile, stat, writeFile } from 'fs/promises';
 import { join } from 'path';
