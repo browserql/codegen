@@ -126,34 +126,48 @@ function getSchema(sources) {
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, Promise.all(sources.map(function (source) { return __awaiter(_this, void 0, void 0, function () {
-                        var stats, string;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    console.log();
-                                    console.log('Reading file', source);
-                                    console.log();
-                                    return [4 /*yield*/, (0, promises_1.stat)(source)];
-                                case 1:
-                                    stats = _a.sent();
-                                    if (stats.isDirectory()) {
-                                        return [2 /*return*/, getSchema([source])];
-                                    }
-                                    if (!/\.g(raph)?ql$/.test(source)) return [3 /*break*/, 3];
-                                    console.log();
-                                    console.log('Reading GraphQL file', source);
-                                    console.log();
-                                    return [4 /*yield*/, (0, promises_1.readFile)((0, path_1.join)(process.cwd(), source))];
-                                case 2:
-                                    string = _a.sent();
-                                    return [2 /*return*/, string.toString()];
-                                case 3: return [2 /*return*/, ''];
-                            }
-                        });
-                    }); }))];
+                case 0:
+                    strings = [];
+                    return [4 /*yield*/, Promise.all(sources.map(function (source) { return __awaiter(_this, void 0, void 0, function () {
+                            var files;
+                            var _this = this;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, (0, promises_1.readdir)(source)];
+                                    case 1:
+                                        files = _a.sent();
+                                        return [4 /*yield*/, Promise.all(files.map(function (file) { return __awaiter(_this, void 0, void 0, function () {
+                                                var stats, _a, _b, src;
+                                                return __generator(this, function (_c) {
+                                                    switch (_c.label) {
+                                                        case 0: return [4 /*yield*/, (0, promises_1.stat)((0, path_1.join)(source, file))];
+                                                        case 1:
+                                                            stats = _c.sent();
+                                                            if (!stats.isDirectory()) return [3 /*break*/, 3];
+                                                            _b = (_a = strings).push;
+                                                            return [4 /*yield*/, getSchema([(0, path_1.join)(source, file)])];
+                                                        case 2:
+                                                            _b.apply(_a, [_c.sent()]);
+                                                            return [3 /*break*/, 5];
+                                                        case 3:
+                                                            if (!/\.g(raph)?ql$/.test(file)) return [3 /*break*/, 5];
+                                                            return [4 /*yield*/, (0, promises_1.readFile)((0, path_1.join)(source, file))];
+                                                        case 4:
+                                                            src = _c.sent();
+                                                            strings.push(src.toString());
+                                                            _c.label = 5;
+                                                        case 5: return [2 /*return*/];
+                                                    }
+                                                });
+                                            }); }))];
+                                    case 2:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }))];
                 case 1:
-                    strings = _a.sent();
+                    _a.sent();
                     return [2 /*return*/, strings.join('\n')];
             }
         });

@@ -53,26 +53,25 @@ async function findGraphqlFiles(dir: string) {
 }
 
 async function getSchema(sources: string[]): Promise<string> {
-  const strings = await Promise.all(
-    sources.map(async (source) => {
-      console.log();
-      console.log('Reading file', source);
-      console.log();
+  const strings: string[] = [];
 
-      const stats = await stat(source);
-      if (stats.isDirectory()) {
-        return getSchema([source]);
-      }
-      if (/\.g(raph)?ql$/.test(source)) {
-        console.log();
-        console.log('Reading GraphQL file', source);
-        console.log();
-        const string = await readFile(join(process.cwd(), source));
-        return string.toString();
-      }
-      return '';
+  await Promise.all(
+    sources.map(async (source) => {
+      const files = await readdir(source);
+      await Promise.all(
+        files.map(async (file) => {
+          const stats = await stat(join(source, file));
+          if (stats.isDirectory()) {
+            strings.push(await getSchema([join(source, file)]));
+          } else if (/\.g(raph)?ql$/.test(file)) {
+            const src = await readFile(join(source, file));
+            strings.push(src.toString());
+          }
+        })
+      );
     })
   );
+
   return strings.join('\n');
 }
 
