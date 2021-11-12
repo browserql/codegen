@@ -127,8 +127,7 @@ function getSchema(sources) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, Promise.all(sources.map(function (source) { return __awaiter(_this, void 0, void 0, function () {
-                        var fileName, stats, files, sources_1, string;
-                        var _this = this;
+                        var fileName, stats, string;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
@@ -136,34 +135,14 @@ function getSchema(sources) {
                                     return [4 /*yield*/, (0, promises_1.stat)(fileName)];
                                 case 1:
                                     stats = _a.sent();
-                                    if (!stats.isDirectory()) return [3 /*break*/, 4];
-                                    return [4 /*yield*/, findGraphqlFiles(fileName)];
-                                case 2:
-                                    files = _a.sent();
-                                    return [4 /*yield*/, Promise.all(files.map(function (file) { return __awaiter(_this, void 0, void 0, function () {
-                                            var src;
-                                            return __generator(this, function (_a) {
-                                                switch (_a.label) {
-                                                    case 0:
-                                                        console.log();
-                                                        console.log('Reading GraphQL file', file);
-                                                        console.log();
-                                                        return [4 /*yield*/, (0, promises_1.readFile)(file)];
-                                                    case 1:
-                                                        src = _a.sent();
-                                                        return [2 /*return*/, src.toString()];
-                                                }
-                                            });
-                                        }); }))];
-                                case 3:
-                                    sources_1 = _a.sent();
-                                    return [2 /*return*/, sources_1.join('\n')];
-                                case 4:
+                                    if (stats.isDirectory()) {
+                                        return [2 /*return*/, getSchema([fileName])];
+                                    }
                                     console.log();
                                     console.log('Reading GraphQL file', fileName);
                                     console.log();
                                     return [4 /*yield*/, (0, promises_1.readFile)((0, path_1.join)(process.cwd(), source))];
-                                case 5:
+                                case 2:
                                     string = _a.sent();
                                     return [2 /*return*/, string.toString()];
                             }

@@ -52,23 +52,13 @@ async function findGraphqlFiles(dir: string) {
   return graphqlFiles;
 }
 
-async function getSchema(sources: string[]) {
+async function getSchema(sources: string[]): Promise<string> {
   const strings = await Promise.all(
     sources.map(async (source) => {
       const fileName = join(process.cwd(), source);
       const stats = await stat(fileName);
       if (stats.isDirectory()) {
-        const files = await findGraphqlFiles(fileName);
-        const sources = await Promise.all(
-          files.map(async (file) => {
-            console.log();
-            console.log('Reading GraphQL file', file);
-            console.log();
-            const src = await readFile(file);
-            return src.toString();
-          })
-        );
-        return sources.join('\n');
+        return getSchema([fileName]);
       }
       console.log();
       console.log('Reading GraphQL file', fileName);
