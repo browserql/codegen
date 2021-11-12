@@ -10,6 +10,9 @@
     "build": "yarn tsc",
     "codegen": "node bin.js"
   },
+  "bin": {
+    "codegen": "./bin.js"
+  },
   "devDependencies": {
     "@types/node": "^16.11.7",
     "prettier": "^2.4.1",
