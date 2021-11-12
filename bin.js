@@ -127,19 +127,17 @@ function getSchema(sources) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, Promise.all(sources.map(function (source) { return __awaiter(_this, void 0, void 0, function () {
-                        var fileName, stats, string;
+                        var stats, string;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0:
-                                    fileName = (0, path_1.join)(process.cwd(), source);
-                                    return [4 /*yield*/, (0, promises_1.stat)(fileName)];
+                                case 0: return [4 /*yield*/, (0, promises_1.stat)(source)];
                                 case 1:
                                     stats = _a.sent();
                                     if (stats.isDirectory()) {
                                         return [2 /*return*/, getSchema([source])];
                                     }
                                     console.log();
-                                    console.log('Reading GraphQL file', fileName);
+                                    console.log('Reading GraphQL file', source);
                                     console.log();
                                     return [4 /*yield*/, (0, promises_1.readFile)((0, path_1.join)(process.cwd(), source))];
                                 case 2:
@@ -167,7 +165,7 @@ function codegen(configFile) {
                     config = _a.sent();
                     schema = config.schema, generates = config.generates, afterAll = config.afterAll;
                     schemas = Array.isArray(schema) ? schema : [schema];
-                    return [4 /*yield*/, getSchema(schemas)];
+                    return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 2:
                     graphqlSchema = _a.sent();
                     _loop_1 = function (generate) {

@@ -55,13 +55,12 @@ async function findGraphqlFiles(dir: string) {
 async function getSchema(sources: string[]): Promise<string> {
   const strings = await Promise.all(
     sources.map(async (source) => {
-      const fileName = join(process.cwd(), source);
-      const stats = await stat(fileName);
+      const stats = await stat(source);
       if (stats.isDirectory()) {
         return getSchema([source]);
       }
       console.log();
-      console.log('Reading GraphQL file', fileName);
+      console.log('Reading GraphQL file', source);
       console.log();
       const string = await readFile(join(process.cwd(), source));
       return string.toString();
@@ -76,7 +75,9 @@ async function codegen(
   const config = await getConfigFile(configFile);
   const { schema, generates, afterAll } = config;
   const schemas = Array.isArray(schema) ? schema : [schema];
-  const graphqlSchema = await getSchema(schemas);
+  const graphqlSchema = await getSchema(
+    schemas.map((s) => join(process.cwd(), s))
+  );
 
   for (const generate of generates) {
     const { file, handler, executable = 'node' } = generate;
