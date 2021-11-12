@@ -69,6 +69,7 @@ async function getSchema(sources: string[]): Promise<string> {
           if (stats.isDirectory()) {
             strings.push(await getSchema([join(source, file)]));
           } else if (/\.g(raph)?ql$/.test(file)) {
+            console.log(grey(`Found GraphQL file: ${join(source, file)}`));
             const src = await readFile(join(source, file));
             strings.push(src.toString());
           }

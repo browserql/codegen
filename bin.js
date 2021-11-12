@@ -154,6 +154,7 @@ function getSchema(sources) {
                                                             return [3 /*break*/, 5];
                                                         case 3:
                                                             if (!/\.g(raph)?ql$/.test(file)) return [3 /*break*/, 5];
+                                                            console.log((0, colors_1.grey)("Found GraphQL file: " + (0, path_1.join)(source, file)));
                                                             return [4 /*yield*/, (0, promises_1.readFile)((0, path_1.join)(source, file))];
                                                         case 4:
                                                             src = _c.sent();
