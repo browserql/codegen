@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 import { exec, spawn } from 'child_process';
+import { grey } from 'colors';
 import { readdir, readFile, stat, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { promisify } from 'util';
@@ -57,6 +58,10 @@ async function getSchema(sources: string[]): Promise<string> {
 
   await Promise.all(
     sources.map(async (source) => {
+      console.log(
+        grey(`Reading directory ${source} in search of GraphQL files`)
+      );
+
       const files = await readdir(source);
       await Promise.all(
         files.map(async (file) => {
