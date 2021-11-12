@@ -5,6 +5,8 @@ const { join } = require('path');
 
 const [, , file, doc] = process.argv;
 
+console.log(123, join(process.cwd(), file));
+
 const { handler } = require(join(process.cwd(), file));
 
 async function run() {
