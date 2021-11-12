@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 import { exec, spawn } from 'child_process';
-import { grey } from 'colors';
+import { grey, yellow } from 'colors';
 import { readdir, readFile, stat, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { promisify } from 'util';
@@ -90,6 +90,8 @@ async function codegen(
   const graphqlSchema = await getSchema(
     schemas.map((s) => join(process.cwd(), s))
   );
+
+  console.log(yellow(graphqlSchema));
 
   for (const generate of generates) {
     const { file, handler, executable = 'node' } = generate;

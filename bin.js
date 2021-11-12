@@ -192,6 +192,7 @@ function codegen(configFile) {
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 2:
                     graphqlSchema = _a.sent();
+                    console.log((0, colors_1.yellow)(graphqlSchema));
                     _loop_1 = function (generate) {
                         var file, handler, _b, executable, output, _c, contents, posts;
                         return __generator(this, function (_d) {
