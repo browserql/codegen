@@ -1,0 +1,21 @@
+{
+  "name": "@browserql/codegen",
+  "version": "1.0.0",
+  "description": "GraphQL code generator",
+  "main": "index.js",
+  "repository": "https://github.com/browserql/codegen",
+  "author": "pierrot",
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn tsc",
+    "codegen": "node bin.js"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.4"
+  },
+  "peerDependencies": {
+    "graphql": "^16.0.1"
+  }
+}
