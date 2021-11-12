@@ -137,21 +137,21 @@ async function codegen(
       // });
     });
 
-    const [, contents] = output.split('======= codegen =======');
+    // const [, contents] = output.split('======= codegen =======');
 
-    await writeFile(join(process.cwd(), file), contents);
+    // await writeFile(join(process.cwd(), file), contents);
 
-    if (afterAll) {
-      const posts = Array.isArray(afterAll) ? afterAll : [afterAll];
+    // if (afterAll) {
+    //   const posts = Array.isArray(afterAll) ? afterAll : [afterAll];
 
-      await Promise.all(
-        posts.map(async (post) => {
-          await promisify(exec)(
-            `${join(process.cwd(), post)} ${join(process.cwd(), file)}`
-          );
-        })
-      );
-    }
+    //   await Promise.all(
+    //     posts.map(async (post) => {
+    //       await promisify(exec)(
+    //         `${join(process.cwd(), post)} ${join(process.cwd(), file)}`
+    //       );
+    //     })
+    //   );
+    // }
   }
 }
 
