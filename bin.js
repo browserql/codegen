@@ -136,7 +136,7 @@ function getSchema(sources) {
                                 case 1:
                                     stats = _a.sent();
                                     if (stats.isDirectory()) {
-                                        return [2 /*return*/, getSchema([fileName])];
+                                        return [2 /*return*/, getSchema([source])];
                                     }
                                     console.log();
                                     console.log('Reading GraphQL file', fileName);
