@@ -101,33 +101,40 @@ async function codegen(
 
       const [exec, ...execs] = executable.split(/\s+/);
 
-      const ps = spawn(exec, [
+      console.log(exec, [
         ...execs,
-        './node_modules/@browserql/codegen/handler2.js',
+        './node_modules/@browserql/codegen/handler.js',
         handler,
         graphqlSchema,
       ]);
 
-      ps.on('error', reject);
+      // const ps = spawn(exec, [
+      //   ...execs,
+      //   './node_modules/@browserql/codegen/handler2.js',
+      //   handler,
+      //   graphqlSchema,
+      // ]);
 
-      ps.on('close', (status) => {
-        if (status === 0) {
-          out.shift();
-          resolve(out.join('\n'));
-        } else {
-          reject(
-            new Error(`Got unexpected status ${status}: ${err.join('\n')}`)
-          );
-        }
-      });
+      // ps.on('error', reject);
 
-      ps.stdout.on('data', (data) => {
-        out.push(data.toString());
-      });
+      // ps.on('close', (status) => {
+      //   if (status === 0) {
+      //     out.shift();
+      //     resolve(out.join('\n'));
+      //   } else {
+      //     reject(
+      //       new Error(`Got unexpected status ${status}: ${err.join('\n')}`)
+      //     );
+      //   }
+      // });
 
-      ps.stderr.on('data', (data) => {
-        err.push(data.toString());
-      });
+      // ps.stdout.on('data', (data) => {
+      //   out.push(data.toString());
+      // });
+
+      // ps.stderr.on('data', (data) => {
+      //   err.push(data.toString());
+      // });
     });
 
     const [, contents] = output.split('======= codegen =======');
