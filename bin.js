@@ -207,7 +207,7 @@ function codegen(configFile) {
                                                 err = [];
                                                 _a = executable.split(/\s+/), exec = _a[0], execs = _a.slice(1);
                                                 ps = (0, child_process_1.spawn)(exec, __spreadArray(__spreadArray([], execs, true), [
-                                                    'node_modules/.bin/@browserql/codegen/handler.js',
+                                                    './node_modules/@browserql/codegen/handler2.js',
                                                     handler,
                                                     graphqlSchema,
                                                 ], false));
