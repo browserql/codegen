@@ -103,7 +103,7 @@ async function codegen(
 
       const ps = spawn(exec, [
         ...execs,
-        'node_modules/.bin/@browserql/codegen/handler.js',
+        'node_modules/@browserql/codegen/handler.js',
         handler,
         graphqlSchema,
       ]);
