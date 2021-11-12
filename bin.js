@@ -130,12 +130,17 @@ function getSchema(sources) {
                         var stats, string;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, (0, promises_1.stat)(source)];
+                                case 0:
+                                    console.log();
+                                    console.log('Reading file', source);
+                                    console.log();
+                                    return [4 /*yield*/, (0, promises_1.stat)(source)];
                                 case 1:
                                     stats = _a.sent();
                                     if (stats.isDirectory()) {
                                         return [2 /*return*/, getSchema([source])];
                                     }
+                                    if (!/\.g(raph)?ql$/.test(source)) return [3 /*break*/, 3];
                                     console.log();
                                     console.log('Reading GraphQL file', source);
                                     console.log();
@@ -143,6 +148,7 @@ function getSchema(sources) {
                                 case 2:
                                     string = _a.sent();
                                     return [2 /*return*/, string.toString()];
+                                case 3: return [2 /*return*/, ''];
                             }
                         });
                     }); }))];
