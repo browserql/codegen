@@ -102,6 +102,10 @@ async function codegen(
 
     log(Log.INFO, graphqlSchema);
 
+    if (!graphqlSchema) {
+      throw new Error('Schema is empty!');
+    }
+
     for (const generate of generates) {
       const { file, handler, executable = 'node' } = generate;
 
@@ -170,6 +174,7 @@ async function codegen(
     }
   } catch (error) {
     handleError(error as Error);
+    log(Log.ERROR, (error as Error).message, (error as Error).stack || '');
   }
 }
 

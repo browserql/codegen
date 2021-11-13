@@ -200,6 +200,9 @@ function codegen(configFile) {
                 case 3:
                     graphqlSchema_1 = _a.sent();
                     (0, log_1.log)(log_1.Log.INFO, graphqlSchema_1);
+                    if (!graphqlSchema_1) {
+                        throw new Error('Schema is empty!');
+                    }
                     _loop_1 = function (generate) {
                         var file, handler, _b, executable, output, _c, contents, posts;
                         return __generator(this, function (_d) {
@@ -288,6 +291,7 @@ function codegen(configFile) {
                 case 8:
                     error_2 = _a.sent();
                     (0, handleError_1.handleError)(error_2);
+                    (0, log_1.log)(log_1.Log.ERROR, error_2.message, error_2.stack || '');
                     return [3 /*break*/, 9];
                 case 9: return [2 /*return*/];
             }
