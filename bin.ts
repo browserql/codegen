@@ -4,6 +4,7 @@ import { grey, yellow } from 'colors';
 import { readdir, readFile, stat, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { promisify } from 'util';
+import { handleError } from './handleError';
 
 interface Config {
   schema: string | string[];
@@ -84,72 +85,76 @@ async function getSchema(sources: string[]): Promise<string> {
 async function codegen(
   configFile: string = join(process.cwd(), 'codegen.json')
 ) {
-  const config = await getConfigFile(configFile);
-  const { schema, generates, afterAll } = config;
-  const schemas = Array.isArray(schema) ? schema : [schema];
-  const graphqlSchema = await getSchema(
-    schemas.map((s) => join(process.cwd(), s))
-  );
+  try {
+    const config = await getConfigFile(configFile);
+    const { schema, generates, afterAll } = config;
+    const schemas = Array.isArray(schema) ? schema : [schema];
+    const graphqlSchema = await getSchema(
+      schemas.map((s) => join(process.cwd(), s))
+    );
 
-  console.log(yellow(graphqlSchema));
+    console.log(yellow(graphqlSchema));
 
-  for (const generate of generates) {
-    const { file, handler, executable = 'node' } = generate;
+    for (const generate of generates) {
+      const { file, handler, executable = 'node' } = generate;
 
-    console.log();
-    console.log('Generating', file);
-    console.log();
+      console.log();
+      console.log('Generating', file);
+      console.log();
 
-    const output: string = await new Promise(async (resolve, reject) => {
-      const out: string[] = [];
-      const err: string[] = [];
+      const output: string = await new Promise(async (resolve, reject) => {
+        const out: string[] = [];
+        const err: string[] = [];
 
-      const [exec, ...execs] = executable.split(/\s+/);
+        const [exec, ...execs] = executable.split(/\s+/);
 
-      const ps = spawn(exec, [
-        ...execs,
-        join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
-        handler,
-        graphqlSchema,
-      ]);
+        const ps = spawn(exec, [
+          ...execs,
+          join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
+          handler,
+          graphqlSchema,
+        ]);
 
-      ps.on('error', reject);
+        ps.on('error', reject);
 
-      ps.on('close', (status) => {
-        if (status === 0) {
-          out.shift();
-          resolve(out.join('\n'));
-        } else {
-          reject(
-            new Error(`Got unexpected status ${status}: ${err.join('\n')}`)
-          );
-        }
+        ps.on('close', (status) => {
+          if (status === 0) {
+            out.shift();
+            resolve(out.join('\n'));
+          } else {
+            reject(
+              new Error(`Got unexpected status ${status}: ${err.join('\n')}`)
+            );
+          }
+        });
+
+        ps.stdout.on('data', (data) => {
+          out.push(data.toString());
+        });
+
+        ps.stderr.on('data', (data) => {
+          err.push(data.toString());
+        });
       });
 
-      ps.stdout.on('data', (data) => {
-        out.push(data.toString());
-      });
+      const [, contents] = output.split('======= codegen =======');
 
-      ps.stderr.on('data', (data) => {
-        err.push(data.toString());
-      });
-    });
+      await writeFile(join(process.cwd(), file), contents);
 
-    const [, contents] = output.split('======= codegen =======');
+      if (afterAll) {
+        const posts = Array.isArray(afterAll) ? afterAll : [afterAll];
 
-    await writeFile(join(process.cwd(), file), contents);
-
-    if (afterAll) {
-      const posts = Array.isArray(afterAll) ? afterAll : [afterAll];
-
-      await Promise.all(
-        posts.map(async (post) => {
-          await promisify(exec)(
-            `${join(process.cwd(), post)} ${join(process.cwd(), file)}`
-          );
-        })
-      );
+        await Promise.all(
+          posts.map(async (post) => {
+            await promisify(exec)(
+              `${join(process.cwd(), post)} ${join(process.cwd(), file)}`
+            );
+          })
+        );
+      }
     }
+  } catch (error) {
+    handleError(error as Error);
   }
 }
 

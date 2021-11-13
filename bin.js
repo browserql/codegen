@@ -51,6 +51,7 @@ var colors_1 = require("colors");
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
 var util_1 = require("util");
+var handleError_1 = require("./handleError");
 function getConfigFile(configFile) {
     return __awaiter(this, void 0, void 0, function () {
         var stats, source, json, error_1;
@@ -180,19 +181,21 @@ function getSchema(sources) {
 function codegen(configFile) {
     if (configFile === void 0) { configFile = (0, path_1.join)(process.cwd(), 'codegen.json'); }
     return __awaiter(this, void 0, void 0, function () {
-        var config, schema, generates, afterAll, schemas, graphqlSchema, _loop_1, _i, generates_1, generate;
+        var config, schema, generates, afterAll, schemas, graphqlSchema_1, _loop_1, _i, generates_1, generate, error_2;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, getConfigFile(configFile)];
+                case 0:
+                    _a.trys.push([0, 7, , 8]);
+                    return [4 /*yield*/, getConfigFile(configFile)];
                 case 1:
                     config = _a.sent();
                     schema = config.schema, generates = config.generates, afterAll = config.afterAll;
                     schemas = Array.isArray(schema) ? schema : [schema];
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 2:
-                    graphqlSchema = _a.sent();
-                    console.log((0, colors_1.yellow)(graphqlSchema));
+                    graphqlSchema_1 = _a.sent();
+                    console.log((0, colors_1.yellow)(graphqlSchema_1));
                     _loop_1 = function (generate) {
                         var file, handler, _b, executable, output, _c, contents, posts;
                         return __generator(this, function (_d) {
@@ -211,7 +214,7 @@ function codegen(configFile) {
                                                 ps = (0, child_process_1.spawn)(exec, __spreadArray(__spreadArray([], execs, true), [
                                                     (0, path_1.join)(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
                                                     handler,
-                                                    graphqlSchema,
+                                                    graphqlSchema_1,
                                                 ], false));
                                                 ps.on('error', reject);
                                                 ps.on('close', function (status) {
@@ -269,7 +272,12 @@ function codegen(configFile) {
                 case 5:
                     _i++;
                     return [3 /*break*/, 3];
-                case 6: return [2 /*return*/];
+                case 6: return [3 /*break*/, 8];
+                case 7:
+                    error_2 = _a.sent();
+                    (0, handleError_1.handleError)(error_2);
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
             }
         });
     });
