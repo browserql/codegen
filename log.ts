@@ -8,19 +8,7 @@ export async function log(level: Log, message: string) {
     console.log(message);
   }
 
-  let msg = message;
-
-  if (level === Log.LIST) {
-    msg = `- ${message}`;
-  }
-
-  await writeFile(
-    logFile,
-    `# ${level}
-${msg}
-`,
-    { flag: 'a+' }
-  );
+  await writeFile(logFile, `${message}\n`, { flag: 'a+' });
 }
 
 export enum Log {

@@ -67,7 +67,7 @@ async function getSchema(sources: string[]): Promise<string> {
           if (stats.isDirectory()) {
             strings.push(await getSchema([join(source, file)]));
           } else if (/\.g(raph)?ql$/.test(file)) {
-            log(Log.LIST, `Found GraphQL file: ${join(source, file)}`);
+            log(Log.INFO, `- Found GraphQL file: ${join(source, file)}`);
             const src = await readFile(join(source, file));
             strings.push(src.toString());
           }
@@ -99,7 +99,12 @@ async function codegen(
       schemas.map((s) => join(process.cwd(), s))
     );
 
-    log(Log.INFO, graphqlSchema);
+    log(
+      Log.INFO,
+      `\`\`\`graphql
+    ${graphqlSchema}
+    \`\`\``
+    );
 
     if (!graphqlSchema) {
       throw new Error('Schema is empty!');
@@ -148,14 +153,14 @@ async function codegen(
         });
       });
 
-      log(Log.INFO, output);
+      log(Log.INFO, `\`\`\`\n${output}\n\`\`\``);
 
       if (output) {
         const [, contents] = output.split('======= codegen =======');
 
         await writeFile(join(process.cwd(), file), contents);
       } else {
-        log(Log.WARNING, 'Output is empty!');
+        log(Log.WARNING, '## Output is empty!');
         await writeFile(join(process.cwd(), file), '');
       }
 

@@ -42,18 +42,13 @@ var path_1 = require("path");
 var logFile = (0, path_1.join)(process.cwd(), 'codegen.log');
 function log(level, message) {
     return __awaiter(this, void 0, void 0, function () {
-        var msg;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     if (level === Log.VERBOSE) {
                         console.log(message);
                     }
-                    msg = message;
-                    if (level === Log.LIST) {
-                        msg = "- " + message;
-                    }
-                    return [4 /*yield*/, (0, promises_1.writeFile)(logFile, "# " + level + "\n" + msg + "\n", { flag: 'a+' })];
+                    return [4 /*yield*/, (0, promises_1.writeFile)(logFile, message + "\n", { flag: 'a+' })];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];

@@ -153,7 +153,7 @@ function getSchema(sources) {
                                                             return [3 /*break*/, 5];
                                                         case 3:
                                                             if (!/\.g(raph)?ql$/.test(file)) return [3 /*break*/, 5];
-                                                            (0, log_1.log)(log_1.Log.LIST, "Found GraphQL file: " + (0, path_1.join)(source, file));
+                                                            (0, log_1.log)(log_1.Log.INFO, "- Found GraphQL file: " + (0, path_1.join)(source, file));
                                                             return [4 /*yield*/, (0, promises_1.readFile)((0, path_1.join)(source, file))];
                                                         case 4:
                                                             src = _c.sent();
@@ -197,7 +197,7 @@ function codegen(configFile) {
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 3:
                     graphqlSchema_1 = _a.sent();
-                    (0, log_1.log)(log_1.Log.INFO, graphqlSchema_1);
+                    (0, log_1.log)(log_1.Log.INFO, "```graphql\n    " + graphqlSchema_1 + "\n    ```");
                     if (!graphqlSchema_1) {
                         throw new Error('Schema is empty!');
                     }
@@ -240,7 +240,7 @@ function codegen(configFile) {
                                         }); })];
                                 case 1:
                                     output = _d.sent();
-                                    (0, log_1.log)(log_1.Log.INFO, output);
+                                    (0, log_1.log)(log_1.Log.INFO, "```\n" + output + "\n```");
                                     if (!output) return [3 /*break*/, 3];
                                     _c = output.split('======= codegen ======='), contents = _c[1];
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), contents)];
@@ -248,7 +248,7 @@ function codegen(configFile) {
                                     _d.sent();
                                     return [3 /*break*/, 5];
                                 case 3:
-                                    (0, log_1.log)(log_1.Log.WARNING, 'Output is empty!');
+                                    (0, log_1.log)(log_1.Log.WARNING, '## Output is empty!');
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), '')];
                                 case 4:
                                     _d.sent();
