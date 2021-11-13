@@ -99,7 +99,7 @@ async function codegen(
       const { file, handler, executable = 'node' } = generate;
 
       console.log();
-      console.log('Generating', file);
+      console.log('Generating', file, { handler, executable });
       console.log();
 
       const output: string = await new Promise(async (resolve, reject) => {

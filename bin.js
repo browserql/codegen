@@ -203,7 +203,7 @@ function codegen(configFile) {
                                 case 0:
                                     file = generate.file, handler = generate.handler, _b = generate.executable, executable = _b === void 0 ? 'node' : _b;
                                     console.log();
-                                    console.log('Generating', file);
+                                    console.log('Generating', file, { handler: handler, executable: executable });
                                     console.log();
                                     return [4 /*yield*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
                                             var out, err, _a, exec, execs, ps;
