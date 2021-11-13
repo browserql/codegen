@@ -39,7 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetLog = exports.Log = exports.log = void 0;
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
-var logFile = (0, path_1.join)(process.cwd(), 'codegen.log');
+var logFile = (0, path_1.join)(process.cwd(), 'codegen-log.md');
 function log(level, message) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {

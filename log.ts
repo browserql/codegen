@@ -1,7 +1,7 @@
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 
-const logFile = join(process.cwd(), 'codegen.log');
+const logFile = join(process.cwd(), 'codegen-log.md');
 
 export async function log(level: Log, message: string) {
   if (level === Log.VERBOSE) {
