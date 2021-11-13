@@ -12,15 +12,8 @@ export async function log(level: Log, ...messages: string[]) {
     logFile,
     `
 =========================
-${new Date()}
+${level}: ${messages.join('\n')}
 =========================
-${level}
-
-${messages.join('\n')}
-
-
-
-
 `,
     { flag: 'a+' }
   );
