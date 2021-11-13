@@ -11,7 +11,7 @@ async function run() {
   return await handler({
     source: doc,
     document: parse(doc),
-    schema: buildSchema(doc),
+    // schema: buildSchema(doc),
     // ast: buildASTSchema(doc),
   });
 }
