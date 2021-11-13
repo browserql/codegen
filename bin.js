@@ -186,15 +186,18 @@ function codegen(configFile) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 7, , 8]);
-                    return [4 /*yield*/, getConfigFile(configFile)];
+                    _a.trys.push([0, 8, , 9]);
+                    return [4 /*yield*/, (0, log_1.resetLog)()];
                 case 1:
+                    _a.sent();
+                    return [4 /*yield*/, getConfigFile(configFile)];
+                case 2:
                     config = _a.sent();
                     schema = config.schema, generates = config.generates, afterAll = config.afterAll;
                     schemas = Array.isArray(schema) ? schema : [schema];
                     (0, log_1.log)(log_1.Log.VERBOSE, 'Scanning for GraphQL files', JSON.stringify(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); })));
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
-                case 2:
+                case 3:
                     graphqlSchema_1 = _a.sent();
                     (0, log_1.log)(log_1.Log.INFO, graphqlSchema_1);
                     _loop_1 = function (generate) {
@@ -270,23 +273,23 @@ function codegen(configFile) {
                         });
                     };
                     _i = 0, generates_1 = generates;
-                    _a.label = 3;
-                case 3:
-                    if (!(_i < generates_1.length)) return [3 /*break*/, 6];
+                    _a.label = 4;
+                case 4:
+                    if (!(_i < generates_1.length)) return [3 /*break*/, 7];
                     generate = generates_1[_i];
                     return [5 /*yield**/, _loop_1(generate)];
-                case 4:
-                    _a.sent();
-                    _a.label = 5;
                 case 5:
+                    _a.sent();
+                    _a.label = 6;
+                case 6:
                     _i++;
-                    return [3 /*break*/, 3];
-                case 6: return [3 /*break*/, 8];
-                case 7:
+                    return [3 /*break*/, 4];
+                case 7: return [3 /*break*/, 9];
+                case 8:
                     error_2 = _a.sent();
                     (0, handleError_1.handleError)(error_2);
-                    return [3 /*break*/, 8];
-                case 8: return [2 /*return*/];
+                    return [3 /*break*/, 9];
+                case 9: return [2 /*return*/];
             }
         });
     });

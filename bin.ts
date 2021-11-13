@@ -5,7 +5,7 @@ import { readdir, readFile, stat, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { promisify } from 'util';
 import { handleError } from './handleError';
-import { Log, log } from './log';
+import { Log, log, resetLog } from './log';
 
 interface Config {
   schema: string | string[];
@@ -85,6 +85,7 @@ async function codegen(
   configFile: string = join(process.cwd(), 'codegen.json')
 ) {
   try {
+    await resetLog();
     const config = await getConfigFile(configFile);
     const { schema, generates, afterAll } = config;
     const schemas = Array.isArray(schema) ? schema : [schema];
