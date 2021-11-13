@@ -157,7 +157,10 @@ ${graphqlSchema}
         });
       });
 
-      log(Log.INFO, `\`\`\`\n${output}\n\`\`\`\n`);
+      log(
+        Log.INFO,
+        `### Output\n\n\`\`\`\n${output.slice(0, 255)} ...\n\`\`\`\n`
+      );
 
       if (output) {
         const [, contents] = output.split('======= codegen =======');

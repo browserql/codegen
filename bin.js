@@ -241,7 +241,7 @@ function codegen(configFile) {
                                         }); })];
                                 case 1:
                                     output = _d.sent();
-                                    (0, log_1.log)(log_1.Log.INFO, "```\n" + output + "\n```\n");
+                                    (0, log_1.log)(log_1.Log.INFO, "### Output\n\n```\n" + output.slice(0, 255) + " ...\n```\n");
                                     if (!output) return [3 /*break*/, 3];
                                     _c = output.split('======= codegen ======='), contents = _c[1];
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), contents)];
