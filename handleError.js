@@ -36,10 +36,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleError = void 0;
+exports.resetErrorFile = exports.handleError = void 0;
 var colors_1 = require("colors");
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
+var log_1 = require("./log");
+var errorFile = (0, path_1.join)(process.cwd(), 'codegen-error.txt');
 function handleError(error) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -47,7 +49,7 @@ function handleError(error) {
                 case 0:
                     console.log((0, colors_1.red)(error.message));
                     console.log((0, colors_1.yellow)(error.stack || ''));
-                    return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), 'codegen-error.txt'), "Error: " + error.message + "\n\nStack: " + error.stack + "\n")];
+                    return [4 /*yield*/, (0, promises_1.writeFile)(errorFile, "Error: " + error.message + "\n\nStack: " + error.stack + "\n")];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];
@@ -56,3 +58,26 @@ function handleError(error) {
     });
 }
 exports.handleError = handleError;
+function resetErrorFile() {
+    return __awaiter(this, void 0, void 0, function () {
+        var error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, (0, promises_1.unlink)(errorFile)];
+                case 1:
+                    _a.sent();
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_1 = _a.sent();
+                    (0, log_1.log)(log_1.Log.WARNING, "Can not unlink error file " + JSON.stringify({
+                        message: error_1.message,
+                    }));
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.resetErrorFile = resetErrorFile;
