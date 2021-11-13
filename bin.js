@@ -203,7 +203,7 @@ function codegen(configFile) {
                         throw new Error('Schema is empty!');
                     }
                     _loop_1 = function (generate) {
-                        var file, handler, _b, executable, after, output, _c, contents, posts, posts;
+                        var file, handler, _b, executable, after, output, _c, contents, posts;
                         return __generator(this, function (_d) {
                             switch (_d.label) {
                                 case 0:
@@ -255,38 +255,28 @@ function codegen(configFile) {
                                     _d.sent();
                                     _d.label = 5;
                                 case 5:
-                                    if (!after) return [3 /*break*/, 7];
-                                    posts = Array.isArray(after) ? after : [after];
+                                    posts = [];
+                                    if (after) {
+                                        posts.push.apply(posts, (Array.isArray(after) ? after : [after]));
+                                    }
+                                    if (afterAll) {
+                                        posts.push.apply(posts, (Array.isArray(afterAll) ? afterAll : [afterAll]));
+                                    }
                                     return [4 /*yield*/, Promise.all(posts.map(function (post) { return __awaiter(_this, void 0, void 0, function () {
+                                            var res;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0: return [4 /*yield*/, (0, util_1.promisify)(child_process_1.exec)((0, path_1.join)(process.cwd(), post) + " " + (0, path_1.join)(process.cwd(), file))];
                                                     case 1:
-                                                        _a.sent();
+                                                        res = _a.sent();
+                                                        console.log(res);
                                                         return [2 /*return*/];
                                                 }
                                             });
                                         }); }))];
                                 case 6:
                                     _d.sent();
-                                    _d.label = 7;
-                                case 7:
-                                    if (!afterAll) return [3 /*break*/, 9];
-                                    posts = Array.isArray(afterAll) ? afterAll : [afterAll];
-                                    return [4 /*yield*/, Promise.all(posts.map(function (post) { return __awaiter(_this, void 0, void 0, function () {
-                                            return __generator(this, function (_a) {
-                                                switch (_a.label) {
-                                                    case 0: return [4 /*yield*/, (0, util_1.promisify)(child_process_1.exec)((0, path_1.join)(process.cwd(), post) + " " + (0, path_1.join)(process.cwd(), file))];
-                                                    case 1:
-                                                        _a.sent();
-                                                        return [2 /*return*/];
-                                                }
-                                            });
-                                        }); }))];
-                                case 8:
-                                    _d.sent();
-                                    _d.label = 9;
-                                case 9: return [2 /*return*/];
+                                    return [2 /*return*/];
                             }
                         });
                     };

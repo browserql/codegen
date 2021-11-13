@@ -172,29 +172,24 @@ ${graphqlSchema}
         await writeFile(join(process.cwd(), file), '');
       }
 
-      if (after) {
-        const posts = Array.isArray(after) ? after : [after];
+      const posts: string[] = [];
 
-        await Promise.all(
-          posts.map(async (post) => {
-            await promisify(exec)(
-              `${join(process.cwd(), post)} ${join(process.cwd(), file)}`
-            );
-          })
-        );
+      if (after) {
+        posts.push(...(Array.isArray(after) ? after : [after]));
       }
 
       if (afterAll) {
-        const posts = Array.isArray(afterAll) ? afterAll : [afterAll];
-
-        await Promise.all(
-          posts.map(async (post) => {
-            await promisify(exec)(
-              `${join(process.cwd(), post)} ${join(process.cwd(), file)}`
-            );
-          })
-        );
+        posts.push(...(Array.isArray(afterAll) ? afterAll : [afterAll]));
       }
+
+      await Promise.all(
+        posts.map(async (post) => {
+          const res = await promisify(exec)(
+            `${join(process.cwd(), post)} ${join(process.cwd(), file)}`
+          );
+          console.log(res);
+        })
+      );
     }
   } catch (error) {
     handleError(error as Error);

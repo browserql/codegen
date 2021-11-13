@@ -7,11 +7,23 @@ const [, , file, doc] = process.argv;
 
 const { handler } = require(join(process.cwd(), file));
 
+// function parseDoc(doc) {
+//   try {
+//     parse(doc)
+//     return doc
+//   } catch (error) {
+//     if (/Unknown type/.test(error.message)) {
+//       const type = error.message.replace(/Unknown type "(.+)"\./)
+//       return parseDoc(doc.concat(`\nscalar $`))
+//     }
+//   }
+// }
+
 async function run() {
   return await handler({
     source: doc,
     document: parse(doc),
-    // schema: buildSchema(doc),
+    schema: buildSchema(doc, { assumeValid: true }),
     // ast: buildASTSchema(doc),
   });
 }
