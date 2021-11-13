@@ -14,6 +14,7 @@ interface Config {
     file: string;
     handler: string;
     executable?: string;
+    after?: string | string[];
   }[];
 }
 
@@ -115,7 +116,7 @@ ${graphqlSchema}
     }
 
     for (const generate of generates) {
-      const { file, handler, executable = 'node' } = generate;
+      const { file, handler, executable = 'node', after } = generate;
 
       log(
         Log.VERBOSE,
@@ -169,6 +170,18 @@ ${graphqlSchema}
       } else {
         log(Log.WARNING, '## Output is empty!');
         await writeFile(join(process.cwd(), file), '');
+      }
+
+      if (after) {
+        const posts = Array.isArray(after) ? after : [after];
+
+        await Promise.all(
+          posts.map(async (post) => {
+            await promisify(exec)(
+              `${join(process.cwd(), post)} ${join(process.cwd(), file)}`
+            );
+          })
+        );
       }
 
       if (afterAll) {
