@@ -47,7 +47,6 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var child_process_1 = require("child_process");
-var colors_1 = require("colors");
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
 var util_1 = require("util");
@@ -137,7 +136,7 @@ function getSchema(sources) {
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        console.log((0, colors_1.grey)("Reading directory " + source + " in search of GraphQL files"));
+                                        (0, log_1.log)(log_1.Log.INFO, "Reading directory " + source + " in search of GraphQL files");
                                         return [4 /*yield*/, (0, promises_1.readdir)(source)];
                                     case 1:
                                         files = _a.sent();
@@ -156,7 +155,7 @@ function getSchema(sources) {
                                                             return [3 /*break*/, 5];
                                                         case 3:
                                                             if (!/\.g(raph)?ql$/.test(file)) return [3 /*break*/, 5];
-                                                            console.log((0, colors_1.grey)("Found GraphQL file: " + (0, path_1.join)(source, file)));
+                                                            (0, log_1.log)(log_1.Log.INFO, "Found GraphQL file: " + (0, path_1.join)(source, file));
                                                             return [4 /*yield*/, (0, promises_1.readFile)((0, path_1.join)(source, file))];
                                                         case 4:
                                                             src = _c.sent();
@@ -197,16 +196,14 @@ function codegen(configFile) {
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 2:
                     graphqlSchema_1 = _a.sent();
-                    console.log((0, colors_1.yellow)(graphqlSchema_1));
+                    (0, log_1.log)(log_1.Log.INFO, graphqlSchema_1);
                     _loop_1 = function (generate) {
                         var file, handler, _b, executable, output, _c, contents, posts;
                         return __generator(this, function (_d) {
                             switch (_d.label) {
                                 case 0:
                                     file = generate.file, handler = generate.handler, _b = generate.executable, executable = _b === void 0 ? 'node' : _b;
-                                    console.log();
-                                    console.log('Generating', file, { handler: handler, executable: executable });
-                                    console.log();
+                                    (0, log_1.log)(log_1.Log.VERBOSE, "Generating file " + file + " with handler " + handler + " (executable: " + executable + ")");
                                     return [4 /*yield*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
                                             var out, err, _a, exec, execs, ps;
                                             return __generator(this, function (_b) {
@@ -239,7 +236,7 @@ function codegen(configFile) {
                                         }); })];
                                 case 1:
                                     output = _d.sent();
-                                    console.log((0, colors_1.magenta)(output));
+                                    (0, log_1.log)(log_1.Log.INFO, output);
                                     if (!output) return [3 /*break*/, 3];
                                     _c = output.split('======= codegen ======='), contents = _c[1];
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), contents)];
@@ -247,7 +244,7 @@ function codegen(configFile) {
                                     _d.sent();
                                     return [3 /*break*/, 5];
                                 case 3:
-                                    console.log('output is empty');
+                                    (0, log_1.log)(log_1.Log.WARNING, 'Output is empty!');
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), '')];
                                 case 4:
                                     _d.sent();
