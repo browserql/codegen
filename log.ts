@@ -11,17 +11,17 @@ export async function log(level: Log, ...messages: string[]) {
   await writeFile(
     logFile,
     `
-  =========================
-  ${new Date()}
-  =========================
-  ${level}
+=========================
+${new Date()}
+=========================
+${level}
 
-  ${messages.join('\n')}
+${messages.join('\n')}
 
 
 
-  
-  `,
+
+`,
     { flag: 'a+' }
   );
 }
