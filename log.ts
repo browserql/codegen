@@ -21,7 +21,7 @@ export enum Log {
 
 export async function resetLog() {
   try {
-    await writeFile(logFile, '# codegen log\n===\n');
+    await writeFile(logFile, '# codegen log\n===\n\n');
   } catch (error) {
     log(
       Log.WARNING,

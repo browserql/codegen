@@ -72,7 +72,7 @@ function resetLog() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, (0, promises_1.writeFile)(logFile, '# codegen log\n===\n')];
+                    return [4 /*yield*/, (0, promises_1.writeFile)(logFile, '# codegen log\n===\n\n')];
                 case 1:
                     _a.sent();
                     return [3 /*break*/, 3];
