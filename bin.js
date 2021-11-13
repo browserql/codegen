@@ -153,7 +153,7 @@ function getSchema(sources) {
                                                             return [3 /*break*/, 5];
                                                         case 3:
                                                             if (!/\.g(raph)?ql$/.test(file)) return [3 /*break*/, 5];
-                                                            (0, log_1.log)(log_1.Log.INFO, "Found GraphQL file: " + (0, path_1.join)(source, file));
+                                                            (0, log_1.log)(log_1.Log.LIST, "Found GraphQL file: " + (0, path_1.join)(source, file));
                                                             return [4 /*yield*/, (0, promises_1.readFile)((0, path_1.join)(source, file))];
                                                         case 4:
                                                             src = _c.sent();
@@ -193,7 +193,7 @@ function codegen(configFile) {
                     config = _a.sent();
                     schema = config.schema, generates = config.generates, afterAll = config.afterAll;
                     schemas = Array.isArray(schema) ? schema : [schema];
-                    (0, log_1.log)(log_1.Log.VERBOSE, 'Scanning for GraphQL files', JSON.stringify(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); })));
+                    (0, log_1.log)(log_1.Log.VERBOSE, "Scanning for GraphQL files " + JSON.stringify(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); })));
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 3:
                     graphqlSchema_1 = _a.sent();
@@ -289,7 +289,7 @@ function codegen(configFile) {
                 case 8:
                     error_2 = _a.sent();
                     (0, handleError_1.handleError)(error_2);
-                    (0, log_1.log)(log_1.Log.ERROR, error_2.message, error_2.stack || '');
+                    (0, log_1.log)(log_1.Log.ERROR, error_2.message + "\n\n" + (error_2.stack || ''));
                     return [3 /*break*/, 9];
                 case 9: return [2 /*return*/];
             }

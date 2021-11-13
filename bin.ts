@@ -67,7 +67,7 @@ async function getSchema(sources: string[]): Promise<string> {
           if (stats.isDirectory()) {
             strings.push(await getSchema([join(source, file)]));
           } else if (/\.g(raph)?ql$/.test(file)) {
-            log(Log.INFO, `Found GraphQL file: ${join(source, file)}`);
+            log(Log.LIST, `Found GraphQL file: ${join(source, file)}`);
             const src = await readFile(join(source, file));
             strings.push(src.toString());
           }
@@ -90,8 +90,9 @@ async function codegen(
 
     log(
       Log.VERBOSE,
-      'Scanning for GraphQL files',
-      JSON.stringify(schemas.map((s) => join(process.cwd(), s)))
+      `Scanning for GraphQL files ${JSON.stringify(
+        schemas.map((s) => join(process.cwd(), s))
+      )}`
     );
 
     const graphqlSchema = await getSchema(
@@ -172,7 +173,10 @@ async function codegen(
     }
   } catch (error) {
     handleError(error as Error);
-    log(Log.ERROR, (error as Error).message, (error as Error).stack || '');
+    log(
+      Log.ERROR,
+      `${(error as Error).message}\n\n${(error as Error).stack || ''}`
+    );
   }
 }
 

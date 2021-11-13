@@ -3,16 +3,21 @@ import { join } from 'path';
 
 const logFile = join(process.cwd(), 'codegen.log');
 
-export async function log(level: Log, ...messages: string[]) {
+export async function log(level: Log, message: string) {
   if (level === Log.VERBOSE) {
-    console.log(...messages);
+    console.log(message);
+  }
+
+  let msg = message;
+
+  if (level === Log.LIST) {
+    msg = `- ${message}`;
   }
 
   await writeFile(
     logFile,
-    `---
-${level}: ${messages.join('\n')}
----
+    `# ${level}
+${msg}
 `,
     { flag: 'a+' }
   );
@@ -23,18 +28,18 @@ export enum Log {
   INFO = 'INFO',
   WARNING = 'WARNING',
   ERROR = 'ERROR',
+  LIST = 'LIST',
 }
 
 export async function resetLog() {
   try {
-    await writeFile(logFile, 'Resetting log');
+    await writeFile(logFile, 'codegen log\n===\n');
   } catch (error) {
     log(
       Log.WARNING,
-      'Can not reset log file',
-      JSON.stringify({
+      `Can not reset log file ${JSON.stringify({
         message: (error as Error).message,
-      })
+      })}`
     );
   }
 }

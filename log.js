@@ -40,19 +40,20 @@ exports.resetLog = exports.Log = exports.log = void 0;
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
 var logFile = (0, path_1.join)(process.cwd(), 'codegen.log');
-function log(level) {
-    var messages = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        messages[_i - 1] = arguments[_i];
-    }
+function log(level, message) {
     return __awaiter(this, void 0, void 0, function () {
+        var msg;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     if (level === Log.VERBOSE) {
-                        console.log.apply(console, messages);
+                        console.log(message);
                     }
-                    return [4 /*yield*/, (0, promises_1.writeFile)(logFile, "---\n" + level + ": " + messages.join('\n') + "\n---\n", { flag: 'a+' })];
+                    msg = message;
+                    if (level === Log.LIST) {
+                        msg = "- " + message;
+                    }
+                    return [4 /*yield*/, (0, promises_1.writeFile)(logFile, "# " + level + "\n" + msg + "\n", { flag: 'a+' })];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];
@@ -67,6 +68,7 @@ var Log;
     Log["INFO"] = "INFO";
     Log["WARNING"] = "WARNING";
     Log["ERROR"] = "ERROR";
+    Log["LIST"] = "LIST";
 })(Log = exports.Log || (exports.Log = {}));
 function resetLog() {
     return __awaiter(this, void 0, void 0, function () {
@@ -75,13 +77,13 @@ function resetLog() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, (0, promises_1.writeFile)(logFile, 'Resetting log')];
+                    return [4 /*yield*/, (0, promises_1.writeFile)(logFile, 'codegen log\n===\n')];
                 case 1:
                     _a.sent();
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();
-                    log(Log.WARNING, 'Can not reset log file', JSON.stringify({
+                    log(Log.WARNING, "Can not reset log file " + JSON.stringify({
                         message: error_1.message,
                     }));
                     return [3 /*break*/, 3];
