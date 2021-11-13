@@ -135,9 +135,7 @@ function getSchema(sources) {
                             var _this = this;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0:
-                                        (0, log_1.log)(log_1.Log.INFO, "Reading directory " + source + " in search of GraphQL files");
-                                        return [4 /*yield*/, (0, promises_1.readdir)(source)];
+                                    case 0: return [4 /*yield*/, (0, promises_1.readdir)(source)];
                                     case 1:
                                         files = _a.sent();
                                         return [4 /*yield*/, Promise.all(files.map(function (file) { return __awaiter(_this, void 0, void 0, function () {

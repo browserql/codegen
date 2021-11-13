@@ -60,8 +60,6 @@ async function getSchema(sources: string[]): Promise<string> {
 
   await Promise.all(
     sources.map(async (source) => {
-      log(Log.INFO, `Reading directory ${source} in search of GraphQL files`);
-
       const files = await readdir(source);
       await Promise.all(
         files.map(async (file) => {
