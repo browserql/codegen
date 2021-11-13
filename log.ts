@@ -35,7 +35,7 @@ export enum Log {
 
 export async function resetLog() {
   try {
-    await writeFile(logFile, '');
+    await writeFile(logFile, 'Resetting log');
   } catch (error) {
     log(
       Log.WARNING,
