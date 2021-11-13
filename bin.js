@@ -263,13 +263,11 @@ function codegen(configFile) {
                                         posts.push.apply(posts, (Array.isArray(afterAll) ? afterAll : [afterAll]));
                                     }
                                     return [4 /*yield*/, Promise.all(posts.map(function (post) { return __awaiter(_this, void 0, void 0, function () {
-                                            var res;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0: return [4 /*yield*/, (0, util_1.promisify)(child_process_1.exec)((0, path_1.join)(process.cwd(), post) + " " + (0, path_1.join)(process.cwd(), file))];
                                                     case 1:
-                                                        res = _a.sent();
-                                                        console.log(res);
+                                                        _a.sent();
                                                         return [2 /*return*/];
                                                 }
                                             });

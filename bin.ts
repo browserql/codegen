@@ -184,10 +184,9 @@ ${graphqlSchema}
 
       await Promise.all(
         posts.map(async (post) => {
-          const res = await promisify(exec)(
+          await promisify(exec)(
             `${join(process.cwd(), post)} ${join(process.cwd(), file)}`
           );
-          console.log(res);
         })
       );
     }
