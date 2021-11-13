@@ -27,4 +27,5 @@ run()
   .catch((error) => {
     console.log('FAILED');
     console.log(error);
+    throw error;
   });
