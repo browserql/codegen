@@ -58,8 +58,6 @@ async function findGraphqlFiles(dir: string) {
 async function getSchema(sources: string[]): Promise<string> {
   const strings: string[] = [];
 
-  log(Log.INFO, '# GraphQL files\n');
-
   await Promise.all(
     sources.map(async (source) => {
       const files = await readdir(source);
@@ -96,6 +94,8 @@ async function codegen(
         schemas.map((s) => join(process.cwd(), s))
       )}`
     );
+
+    log(Log.INFO, '# GraphQL files\n');
 
     const graphqlSchema = await getSchema(
       schemas.map((s) => join(process.cwd(), s))

@@ -130,7 +130,6 @@ function getSchema(sources) {
             switch (_a.label) {
                 case 0:
                     strings = [];
-                    (0, log_1.log)(log_1.Log.INFO, '# GraphQL files\n');
                     return [4 /*yield*/, Promise.all(sources.map(function (source) { return __awaiter(_this, void 0, void 0, function () {
                             var files;
                             var _this = this;
@@ -195,6 +194,7 @@ function codegen(configFile) {
                     schema = config.schema, generates = config.generates, afterAll = config.afterAll;
                     schemas = Array.isArray(schema) ? schema : [schema];
                     (0, log_1.log)(log_1.Log.VERBOSE, "Scanning for GraphQL files " + JSON.stringify(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); })));
+                    (0, log_1.log)(log_1.Log.INFO, '# GraphQL files\n');
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 3:
                     graphqlSchema_1 = _a.sent();
