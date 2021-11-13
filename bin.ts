@@ -5,6 +5,7 @@ import { readdir, readFile, stat, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { promisify } from 'util';
 import { handleError } from './handleError';
+import { Log, log } from './log';
 
 interface Config {
   schema: string | string[];
@@ -89,6 +90,13 @@ async function codegen(
     const config = await getConfigFile(configFile);
     const { schema, generates, afterAll } = config;
     const schemas = Array.isArray(schema) ? schema : [schema];
+
+    log(
+      Log.VERBOSE,
+      'Scanning for GraphQL files',
+      JSON.stringify(schemas.map((s) => join(process.cwd(), s)))
+    );
+
     const graphqlSchema = await getSchema(
       schemas.map((s) => join(process.cwd(), s))
     );
@@ -139,9 +147,14 @@ async function codegen(
 
       console.log(magenta(output));
 
-      const [, contents] = output.split('======= codegen =======');
+      if (output) {
+        const [, contents] = output.split('======= codegen =======');
 
-      await writeFile(join(process.cwd(), file), contents);
+        await writeFile(join(process.cwd(), file), contents);
+      } else {
+        console.log('output is empty');
+        await writeFile(join(process.cwd(), file), '');
+      }
 
       if (afterAll) {
         const posts = Array.isArray(afterAll) ? afterAll : [afterAll];

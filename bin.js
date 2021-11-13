@@ -52,6 +52,7 @@ var promises_1 = require("fs/promises");
 var path_1 = require("path");
 var util_1 = require("util");
 var handleError_1 = require("./handleError");
+var log_1 = require("./log");
 function getConfigFile(configFile) {
     return __awaiter(this, void 0, void 0, function () {
         var stats, source, json, error_1;
@@ -192,6 +193,7 @@ function codegen(configFile) {
                     config = _a.sent();
                     schema = config.schema, generates = config.generates, afterAll = config.afterAll;
                     schemas = Array.isArray(schema) ? schema : [schema];
+                    (0, log_1.log)(log_1.Log.VERBOSE, 'Scanning for GraphQL files', JSON.stringify(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); })));
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 2:
                     graphqlSchema_1 = _a.sent();
@@ -238,11 +240,20 @@ function codegen(configFile) {
                                 case 1:
                                     output = _d.sent();
                                     console.log((0, colors_1.magenta)(output));
+                                    if (!output) return [3 /*break*/, 3];
                                     _c = output.split('======= codegen ======='), contents = _c[1];
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), contents)];
                                 case 2:
                                     _d.sent();
-                                    if (!afterAll) return [3 /*break*/, 4];
+                                    return [3 /*break*/, 5];
+                                case 3:
+                                    console.log('output is empty');
+                                    return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), '')];
+                                case 4:
+                                    _d.sent();
+                                    _d.label = 5;
+                                case 5:
+                                    if (!afterAll) return [3 /*break*/, 7];
                                     posts = Array.isArray(afterAll) ? afterAll : [afterAll];
                                     return [4 /*yield*/, Promise.all(posts.map(function (post) { return __awaiter(_this, void 0, void 0, function () {
                                             return __generator(this, function (_a) {
@@ -254,10 +265,10 @@ function codegen(configFile) {
                                                 }
                                             });
                                         }); }))];
-                                case 3:
+                                case 6:
                                     _d.sent();
-                                    _d.label = 4;
-                                case 4: return [2 /*return*/];
+                                    _d.label = 7;
+                                case 7: return [2 /*return*/];
                             }
                         });
                     };
