@@ -58,6 +58,8 @@ async function findGraphqlFiles(dir: string) {
 async function getSchema(sources: string[]): Promise<string> {
   const strings: string[] = [];
 
+  log(Log.INFO, '# GraphQL files\n');
+
   await Promise.all(
     sources.map(async (source) => {
       const files = await readdir(source);
@@ -67,7 +69,7 @@ async function getSchema(sources: string[]): Promise<string> {
           if (stats.isDirectory()) {
             strings.push(await getSchema([join(source, file)]));
           } else if (/\.g(raph)?ql$/.test(file)) {
-            log(Log.INFO, `- Found GraphQL file: ${join(source, file)}`);
+            log(Log.INFO, `- ${join(source, file)}`);
             const src = await readFile(join(source, file));
             strings.push(src.toString());
           }
@@ -101,9 +103,11 @@ async function codegen(
 
     log(
       Log.INFO,
-      `\`\`\`graphql
-    ${graphqlSchema}
-    \`\`\``
+      `## Schema
+
+\`\`\`graphql
+${graphqlSchema}
+\`\`\``
     );
 
     if (!graphqlSchema) {
@@ -115,7 +119,7 @@ async function codegen(
 
       log(
         Log.VERBOSE,
-        `Generating file ${file} with handler ${handler} (executable: ${executable})`
+        `## Generating file ${file} with handler ${handler} (executable: ${executable})`
       );
 
       const output: string = await new Promise(async (resolve, reject) => {
@@ -153,7 +157,7 @@ async function codegen(
         });
       });
 
-      log(Log.INFO, `\`\`\`\n${output}\n\`\`\``);
+      log(Log.INFO, `\`\`\`\n${output}\n\`\`\`\n`);
 
       if (output) {
         const [, contents] = output.split('======= codegen =======');

@@ -130,6 +130,7 @@ function getSchema(sources) {
             switch (_a.label) {
                 case 0:
                     strings = [];
+                    (0, log_1.log)(log_1.Log.INFO, '# GraphQL files\n');
                     return [4 /*yield*/, Promise.all(sources.map(function (source) { return __awaiter(_this, void 0, void 0, function () {
                             var files;
                             var _this = this;
@@ -153,7 +154,7 @@ function getSchema(sources) {
                                                             return [3 /*break*/, 5];
                                                         case 3:
                                                             if (!/\.g(raph)?ql$/.test(file)) return [3 /*break*/, 5];
-                                                            (0, log_1.log)(log_1.Log.INFO, "- Found GraphQL file: " + (0, path_1.join)(source, file));
+                                                            (0, log_1.log)(log_1.Log.INFO, "- " + (0, path_1.join)(source, file));
                                                             return [4 /*yield*/, (0, promises_1.readFile)((0, path_1.join)(source, file))];
                                                         case 4:
                                                             src = _c.sent();
@@ -197,7 +198,7 @@ function codegen(configFile) {
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 3:
                     graphqlSchema_1 = _a.sent();
-                    (0, log_1.log)(log_1.Log.INFO, "```graphql\n    " + graphqlSchema_1 + "\n    ```");
+                    (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema_1 + "\n```");
                     if (!graphqlSchema_1) {
                         throw new Error('Schema is empty!');
                     }
@@ -207,7 +208,7 @@ function codegen(configFile) {
                             switch (_d.label) {
                                 case 0:
                                     file = generate.file, handler = generate.handler, _b = generate.executable, executable = _b === void 0 ? 'node' : _b;
-                                    (0, log_1.log)(log_1.Log.VERBOSE, "Generating file " + file + " with handler " + handler + " (executable: " + executable + ")");
+                                    (0, log_1.log)(log_1.Log.VERBOSE, "## Generating file " + file + " with handler " + handler + " (executable: " + executable + ")");
                                     return [4 /*yield*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
                                             var out, err, _a, exec, execs, ps;
                                             return __generator(this, function (_b) {
@@ -240,7 +241,7 @@ function codegen(configFile) {
                                         }); })];
                                 case 1:
                                     output = _d.sent();
-                                    (0, log_1.log)(log_1.Log.INFO, "```\n" + output + "\n```");
+                                    (0, log_1.log)(log_1.Log.INFO, "```\n" + output + "\n```\n");
                                     if (!output) return [3 /*break*/, 3];
                                     _c = output.split('======= codegen ======='), contents = _c[1];
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), contents)];
