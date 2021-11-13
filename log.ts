@@ -10,10 +10,9 @@ export async function log(level: Log, ...messages: string[]) {
 
   await writeFile(
     logFile,
-    `
-=========================
+    `---
 ${level}: ${messages.join('\n')}
-=========================
+---
 `,
     { flag: 'a+' }
   );

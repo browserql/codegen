@@ -52,7 +52,7 @@ function log(level) {
                     if (level === Log.VERBOSE) {
                         console.log.apply(console, messages);
                     }
-                    return [4 /*yield*/, (0, promises_1.writeFile)(logFile, "\n=========================\n" + level + ": " + messages.join('\n') + "\n=========================\n", { flag: 'a+' })];
+                    return [4 /*yield*/, (0, promises_1.writeFile)(logFile, "---\n" + level + ": " + messages.join('\n') + "\n---\n", { flag: 'a+' })];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];
