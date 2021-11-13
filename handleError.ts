@@ -8,8 +8,6 @@ export async function handleError(error: Error) {
 
   await writeFile(
     join(process.cwd(), 'codegen-error.txt'),
-    `Error: ${error.message}
-    Stack: ${error.stack}
-    `
+    `Error: ${error.message}\n\nStack: ${error.stack}\n`
   );
 }

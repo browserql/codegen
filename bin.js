@@ -237,6 +237,7 @@ function codegen(configFile) {
                                         }); })];
                                 case 1:
                                     output = _d.sent();
+                                    console.log((0, colors_1.magenta)(output));
                                     _c = output.split('======= codegen ======='), contents = _c[1];
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), contents)];
                                 case 2:

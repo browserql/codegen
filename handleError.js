@@ -47,7 +47,7 @@ function handleError(error) {
                 case 0:
                     console.log((0, colors_1.red)(error.message));
                     console.log((0, colors_1.yellow)(error.stack || ''));
-                    return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), 'codegen-error.txt'), "Error: " + error.message + "\n    Stack: " + error.stack + "\n    ")];
+                    return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), 'codegen-error.txt'), "Error: " + error.message + "\n\nStack: " + error.stack + "\n")];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];

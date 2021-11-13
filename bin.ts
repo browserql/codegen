@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 import { exec, spawn } from 'child_process';
-import { grey, yellow } from 'colors';
+import { grey, magenta, yellow } from 'colors';
 import { readdir, readFile, stat, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { promisify } from 'util';
@@ -136,6 +136,8 @@ async function codegen(
           err.push(data.toString());
         });
       });
+
+      console.log(magenta(output));
 
       const [, contents] = output.split('======= codegen =======');
 
