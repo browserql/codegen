@@ -3,7 +3,7 @@
 const { parse, buildSchema, buildASTSchema } = require('graphql');
 const { join } = require('path');
 
-const [, , file, doc, _args] = process.argv;
+const [, , file, doc, _args = '{}'] = process.argv;
 
 const { handler } = require(join(process.cwd(), file));
 
