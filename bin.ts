@@ -139,7 +139,7 @@ ${graphqlSchema}
 
       const output: string = await new Promise(async (resolve, reject) => {
         const out: string[] = [];
-        const err: string[] = [];
+        const all: string[] = [];
 
         const [exec, ...execs] = executable.split(/\s+/);
 
@@ -159,17 +159,18 @@ ${graphqlSchema}
             resolve(out.join('\n'));
           } else {
             reject(
-              new Error(`Got unexpected status ${status}: ${err.join('\n')}`)
+              new Error(`Got unexpected status ${status}: ${all.join('\n')}`)
             );
           }
         });
 
         ps.stdout.on('data', (data) => {
           out.push(data.toString());
+          all.push(data.toString());
         });
 
         ps.stderr.on('data', (data) => {
-          err.push(data.toString());
+          all.push(data.toString());
         });
       });
 
