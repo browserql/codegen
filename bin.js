@@ -203,23 +203,24 @@ function codegen(configFile) {
                         throw new Error('Schema is empty!');
                     }
                     _loop_1 = function (generate) {
-                        var file, handler, _b, executable, after, args, output, _c, contents, posts;
-                        return __generator(this, function (_d) {
-                            switch (_d.label) {
+                        var file, handler, _b, executable, after, _c, args, output, _d, contents, posts;
+                        return __generator(this, function (_e) {
+                            switch (_e.label) {
                                 case 0:
-                                    file = generate.file, handler = generate.handler, _b = generate.executable, executable = _b === void 0 ? 'node' : _b, after = generate.after, args = generate.arguments;
+                                    file = generate.file, handler = generate.handler, _b = generate.executable, executable = _b === void 0 ? 'node' : _b, after = generate.after, _c = generate.arguments, args = _c === void 0 ? {} : _c;
                                     (0, log_1.log)(log_1.Log.VERBOSE, "## Generating file " + file + " with handler " + handler + " (arguments: " + JSON.stringify(args) + ", executable: " + executable + ")");
                                     (0, log_1.log)(log_1.Log.VERBOSE, "  -- (arguments: " + JSON.stringify(args) + ", executable: " + executable + ")");
                                     return [4 /*yield*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                                            var out, err, _a, exec, execs, ps;
+                                            var out, all, _a, exec, execs, ps;
                                             return __generator(this, function (_b) {
                                                 out = [];
-                                                err = [];
+                                                all = [];
                                                 _a = executable.split(/\s+/), exec = _a[0], execs = _a.slice(1);
                                                 ps = (0, child_process_1.spawn)(exec, __spreadArray(__spreadArray([], execs, true), [
                                                     (0, path_1.join)(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
                                                     handler,
                                                     graphqlSchema_1,
+                                                    JSON.stringify(args),
                                                 ], false));
                                                 ps.on('error', reject);
                                                 ps.on('close', function (status) {
@@ -228,33 +229,34 @@ function codegen(configFile) {
                                                         resolve(out.join('\n'));
                                                     }
                                                     else {
-                                                        reject(new Error("Got unexpected status " + status + ": " + err.join('\n')));
+                                                        reject(new Error("Got unexpected status " + status + ": " + all.join('\n')));
                                                     }
                                                 });
                                                 ps.stdout.on('data', function (data) {
                                                     out.push(data.toString());
+                                                    all.push(data.toString());
                                                 });
                                                 ps.stderr.on('data', function (data) {
-                                                    err.push(data.toString());
+                                                    all.push(data.toString());
                                                 });
                                                 return [2 /*return*/];
                                             });
                                         }); })];
                                 case 1:
-                                    output = _d.sent();
+                                    output = _e.sent();
                                     (0, log_1.log)(log_1.Log.INFO, "### Output\n\n```\n" + output.slice(0, 255) + " ...\n```\n");
                                     if (!output) return [3 /*break*/, 3];
-                                    _c = output.split('======= codegen ======='), contents = _c[1];
+                                    _d = output.split('======= codegen ======='), contents = _d[1];
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), contents)];
                                 case 2:
-                                    _d.sent();
+                                    _e.sent();
                                     return [3 /*break*/, 5];
                                 case 3:
                                     (0, log_1.log)(log_1.Log.WARNING, '## Output is empty!');
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), '')];
                                 case 4:
-                                    _d.sent();
-                                    _d.label = 5;
+                                    _e.sent();
+                                    _e.label = 5;
                                 case 5:
                                     posts = [];
                                     if (after) {
@@ -274,7 +276,7 @@ function codegen(configFile) {
                                             });
                                         }); }))];
                                 case 6:
-                                    _d.sent();
+                                    _e.sent();
                                     return [2 /*return*/];
                             }
                         });
