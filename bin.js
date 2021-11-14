@@ -203,12 +203,13 @@ function codegen(configFile) {
                         throw new Error('Schema is empty!');
                     }
                     _loop_1 = function (generate) {
-                        var file, handler, _b, executable, after, output, _c, contents, posts;
+                        var file, handler, _b, executable, after, args, output, _c, contents, posts;
                         return __generator(this, function (_d) {
                             switch (_d.label) {
                                 case 0:
-                                    file = generate.file, handler = generate.handler, _b = generate.executable, executable = _b === void 0 ? 'node' : _b, after = generate.after;
-                                    (0, log_1.log)(log_1.Log.VERBOSE, "## Generating file " + file + " with handler " + handler + " (executable: " + executable + ")");
+                                    file = generate.file, handler = generate.handler, _b = generate.executable, executable = _b === void 0 ? 'node' : _b, after = generate.after, args = generate.arguments;
+                                    (0, log_1.log)(log_1.Log.VERBOSE, "## Generating file " + file + " with handler " + handler + " (arguments: " + JSON.stringify(args) + ", executable: " + executable + ")");
+                                    (0, log_1.log)(log_1.Log.VERBOSE, "  -- (arguments: " + JSON.stringify(args) + ", executable: " + executable + ")");
                                     return [4 /*yield*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
                                             var out, err, _a, exec, execs, ps;
                                             return __generator(this, function (_b) {

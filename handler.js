@@ -3,7 +3,7 @@
 const { parse, buildSchema, buildASTSchema } = require('graphql');
 const { join } = require('path');
 
-const [, , file, doc] = process.argv;
+const [, , file, doc, _args] = process.argv;
 
 const { handler } = require(join(process.cwd(), file));
 
@@ -20,11 +20,13 @@ const { handler } = require(join(process.cwd(), file));
 // }
 
 async function run() {
+  const args = JSON.parse(_args);
   return await handler({
     source: doc,
     document: parse(doc),
     schema: buildSchema(doc, { assumeValid: true }),
     // ast: buildASTSchema(doc),
+    arguments: args,
   });
 }
 

@@ -15,6 +15,7 @@ interface Config {
     handler: string;
     executable?: string;
     after?: string | string[];
+    arguments?: Record<string, any>;
   }[];
 }
 
@@ -116,11 +117,24 @@ ${graphqlSchema}
     }
 
     for (const generate of generates) {
-      const { file, handler, executable = 'node', after } = generate;
+      const {
+        file,
+        handler,
+        executable = 'node',
+        after,
+        arguments: args = {},
+      } = generate;
 
       log(
         Log.VERBOSE,
-        `## Generating file ${file} with handler ${handler} (executable: ${executable})`
+        `## Generating file ${file} with handler ${handler} (arguments: ${JSON.stringify(
+          args
+        )}, executable: ${executable})`
+      );
+
+      log(
+        Log.VERBOSE,
+        `  -- (arguments: ${JSON.stringify(args)}, executable: ${executable})`
       );
 
       const output: string = await new Promise(async (resolve, reject) => {
@@ -134,6 +148,7 @@ ${graphqlSchema}
           join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
           handler,
           graphqlSchema,
+          JSON.stringify(args),
         ]);
 
         ps.on('error', reject);
