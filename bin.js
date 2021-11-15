@@ -1,16 +1,5 @@
 #! /usr/bin/env node
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -47,17 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -70,12 +48,12 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var child_process_1 = require("child_process");
 var promises_1 = require("fs/promises");
-var graphql_1 = require("graphql");
 var path_1 = require("path");
 var util_1 = require("util");
 var handleError_1 = require("./handleError");
 var log_1 = require("./log");
 var package_json_1 = require("./package.json");
+var merge_schemas_1 = require("@browserql/merge-schemas");
 function getConfigFile(configFile) {
     return __awaiter(this, void 0, void 0, function () {
         var stats, source, json, error_1;
@@ -162,35 +140,6 @@ function getSchema(sources) {
         });
     });
 }
-var extendError = /There can be only one type named "(.+)"\./;
-function sanitizeSchema(source) {
-    try {
-        (0, graphql_1.buildSchema)(source);
-        return source;
-    }
-    catch (error) {
-        if (error instanceof Error) {
-            if (extendError.test(error.message)) {
-                var type_1 = error.message.replace(extendError, '$1');
-                var _a = (0, graphql_1.parse)(source), definitions = _a.definitions, doc = __rest(_a, ["definitions"]);
-                var found_1 = false;
-                var nextDefs = definitions.map(function (def) {
-                    if (def.kind === 'ObjectTypeDefinition' && def.name.value === type_1) {
-                        if (!found_1) {
-                            found_1 = true;
-                        }
-                        else {
-                            return __assign(__assign({}, def), { kind: 'ObjectTypeExtension' });
-                        }
-                    }
-                    return def;
-                });
-                return sanitizeSchema((0, graphql_1.print)(__assign(__assign({}, doc), { definitions: nextDefs })));
-            }
-        }
-        throw error;
-    }
-}
 function codegen(configFile) {
     if (configFile === void 0) { configFile = (0, path_1.join)(process.cwd(), 'codegen.json'); }
     return __awaiter(this, void 0, void 0, function () {
@@ -217,7 +166,7 @@ function codegen(configFile) {
                     if (!all) {
                         throw new Error('Schema is empty!');
                     }
-                    sanitized = sanitizeSchema(all);
+                    sanitized = (0, merge_schemas_1.sanitizeSchema)(all);
                     graphqlSchema_1 = sanitized;
                     (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema_1 + "\n```");
                     _loop_1 = function (generate) {
@@ -235,7 +184,8 @@ function codegen(configFile) {
                                                 all = [];
                                                 _a = executable.split(/\s+/), exec = _a[0], execs = _a.slice(1);
                                                 ps = (0, child_process_1.spawn)(exec, __spreadArray(__spreadArray([], execs, true), [
-                                                    (0, path_1.join)(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
+                                                    // join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
+                                                    (0, path_1.join)(process.cwd(), '../handler.js'),
                                                     handler,
                                                     graphqlSchema_1,
                                                     JSON.stringify(args),

@@ -7,6 +7,7 @@ import { promisify } from 'util';
 import { handleError } from './handleError';
 import { Log, log, resetLog } from './log';
 import { version } from './package.json';
+import { sanitizeSchema } from '@browserql/merge-schemas';
 
 interface Config {
   schema: string | string[];
@@ -61,43 +62,6 @@ async function getSchema(sources: string[]): Promise<string> {
   );
 
   return strings.join('\n');
-}
-
-const extendError = /There can be only one type named "(.+)"\./;
-
-function sanitizeSchema(source: string): string {
-  try {
-    buildSchema(source);
-    return source;
-  } catch (error) {
-    if (error instanceof Error) {
-      if (extendError.test(error.message)) {
-        const type = error.message.replace(extendError, '$1');
-        const { definitions, ...doc } = parse(source);
-        let found = false;
-        const nextDefs: DefinitionNode[] = definitions.map((def) => {
-          if (def.kind === 'ObjectTypeDefinition' && def.name.value === type) {
-            if (!found) {
-              found = true;
-            } else {
-              return {
-                ...def,
-                kind: 'ObjectTypeExtension' as Kind.INTERFACE_TYPE_DEFINITION,
-              };
-            }
-          }
-          return def;
-        });
-        return sanitizeSchema(
-          print({
-            ...doc,
-            definitions: nextDefs,
-          })
-        );
-      }
-    }
-    throw error;
-  }
 }
 
 async function codegen(
@@ -168,7 +132,8 @@ ${graphqlSchema}
 
         const ps = spawn(exec, [
           ...execs,
-          join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
+          // join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
+          join(process.cwd(), '../handler.js'),
           handler,
           graphqlSchema,
           JSON.stringify(args),

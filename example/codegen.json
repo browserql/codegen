@@ -1,0 +1,11 @@
+{
+  "schema": "schema",
+  "afterAll": "node_modules/.bin/prettier --write",
+  "generates": [
+    {
+      "file": "gen.ts",
+      "handler": "example.ts",
+      "executable": "npx ts-node"
+    }
+  ]
+}
