@@ -1,6 +1,6 @@
 {
   "name": "@browserql/codegen",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "GraphQL code generator",
   "main": "index.js",
   "repository": "https://github.com/browserql/codegen",
@@ -22,7 +22,7 @@
     "graphql": "^16.0.1"
   },
   "dependencies": {
-    "@browserql/merge-schemas": "browserql/merge-schemas#v1.0.4",
+    "@browserql/merge-schemas": "browserql/merge-schemas#v1.0.5",
     "colors": "^1.4.0"
   }
 }
