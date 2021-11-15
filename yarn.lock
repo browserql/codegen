@@ -3,8 +3,10 @@
 
 
 "@browserql/merge-schemas@browserql/merge-schemas":
-  version "1.0.0"
-  resolved "https://codeload.github.com/browserql/merge-schemas/tar.gz/4cfacf16c78d3eeea8783d0f794f1a5d83403d6b"
+  version "1.0.1"
+  resolved "https://codeload.github.com/browserql/merge-schemas/tar.gz/d75bb460227d40b3c2447083916c3134f5304b53"
+  dependencies:
+    graphql "^16.0.1"
 
 "@types/node@^16.11.7":
   version "16.11.7"
@@ -15,6 +17,11 @@ colors@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==
+
+graphql@^16.0.1:
+  version "16.0.1"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.0.1.tgz#93a13cd4e0e38ca8d0832e79614c8578bfd34f10"
+  integrity sha512-oPvCuu6dlLdiz8gZupJ47o1clgb72r1u8NDBcQYjcV6G/iEdmE11B1bBlkhXRvV0LisP/SXRFP7tT6AgaTjpzg==
 
 prettier@^2.4.1:
   version "2.4.1"
