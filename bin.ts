@@ -113,9 +113,9 @@ async function codegen(
 
     log(Log.INFO, '# GraphQL files\n');
 
-    const graphqlSchema = sanitizeSchema(
+    const graphqlSchema = `# My\n\n${sanitizeSchema(
       await getSchema(schemas.map((s) => join(process.cwd(), s)))
-    );
+    )}`;
 
     log(
       Log.INFO,
