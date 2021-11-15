@@ -163,7 +163,6 @@ function getSchema(sources) {
 }
 var extendError = /^There can be only one type named "(.+)"\.$/;
 function sanitizeSchema(source) {
-    console.log(source);
     try {
         (0, graphql_1.buildSchema)(source);
         return source;
@@ -214,8 +213,8 @@ function codegen(configFile) {
                 case 3:
                     all = _a.sent();
                     sanitized = sanitizeSchema(all);
-                    graphqlSchema_1 = "# My\n\n" + sanitized;
-                    (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\nHELLO\n```");
+                    graphqlSchema_1 = sanitized;
+                    (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema_1 + "\n```");
                     if (!graphqlSchema_1) {
                         throw new Error('Schema is empty!');
                     }

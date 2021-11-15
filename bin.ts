@@ -65,7 +65,6 @@ async function getSchema(sources: string[]): Promise<string> {
 const extendError = /^There can be only one type named "(.+)"\.$/;
 
 function sanitizeSchema(source: string): string {
-  console.log(source);
   try {
     buildSchema(source);
     return source;
@@ -122,14 +121,14 @@ async function codegen(
 
     const sanitized = sanitizeSchema(all);
 
-    const graphqlSchema = `# My\n\n${sanitized}`;
+    const graphqlSchema = sanitized;
 
     log(
       Log.INFO,
       `## Schema
 
 \`\`\`graphql
-HELLO
+${graphqlSchema}
 \`\`\``
     );
 
