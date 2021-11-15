@@ -63,7 +63,7 @@ async function getSchema(sources: string[]): Promise<string> {
   return strings.join('\n');
 }
 
-const extendError = /^There can be only one type named "(.+)"\.$/;
+const extendError = /There can be only one type named "(.+)"\./;
 
 function sanitizeSchema(source: string): string {
   try {

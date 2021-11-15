@@ -162,7 +162,7 @@ function getSchema(sources) {
         });
     });
 }
-var extendError = /^There can be only one type named "(.+)"\.$/;
+var extendError = /There can be only one type named "(.+)"\./;
 function sanitizeSchema(source) {
     try {
         (0, graphql_1.buildSchema)(source);
