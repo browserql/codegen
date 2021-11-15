@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 import { exec, spawn } from 'child_process';
-import { grey, magenta, yellow } from 'colors';
 import { readdir, readFile, stat, writeFile } from 'fs/promises';
+import { buildSchema, parse, DefinitionNode, Kind, print } from 'graphql';
 import { join } from 'path';
 import { promisify } from 'util';
 import { handleError } from './handleError';
@@ -38,25 +38,6 @@ async function getConfigFile(configFile: string) {
   }
 }
 
-async function findGraphqlFiles(dir: string) {
-  const files = await readdir(dir);
-  const graphqlFiles: string[] = [];
-  await Promise.all(
-    files.map(async (file) => {
-      if (/\.graphql$/.test(file)) {
-        graphqlFiles.push(join(dir, file));
-      } else {
-        const stats = await stat(join(dir, file));
-        if (stats.isDirectory()) {
-          const results = await findGraphqlFiles(join(dir, file));
-          graphqlFiles.push(...results);
-        }
-      }
-    })
-  );
-  return graphqlFiles;
-}
-
 async function getSchema(sources: string[]): Promise<string> {
   const strings: string[] = [];
 
@@ -81,6 +62,38 @@ async function getSchema(sources: string[]): Promise<string> {
   return strings.join('\n');
 }
 
+const extendError = /"There can be only one type named "(.+)"\.$/;
+
+function sanitizeSchema(source: string): string {
+  try {
+    buildSchema(source);
+    return source;
+  } catch (error) {
+    if (error instanceof Error) {
+      if (extendError.test(error.message)) {
+        const type = error.message.replace(extendError, '$1');
+        const { definitions, ...doc } = parse(source);
+        const nextDefs: DefinitionNode[] = definitions.map((def) => {
+          if (def.kind === 'ObjectTypeDefinition' && def.name.value === type) {
+            return {
+              ...def,
+              kind: 'ObjectTypeExtensionDefinition' as Kind.INTERFACE_TYPE_DEFINITION,
+            };
+          }
+          return def;
+        });
+        return sanitizeSchema(
+          print({
+            ...doc,
+            definitions: nextDefs,
+          })
+        );
+      }
+    }
+    throw error;
+  }
+}
+
 async function codegen(
   configFile: string = join(process.cwd(), 'codegen.json')
 ) {
@@ -99,8 +112,8 @@ async function codegen(
 
     log(Log.INFO, '# GraphQL files\n');
 
-    const graphqlSchema = await getSchema(
-      schemas.map((s) => join(process.cwd(), s))
+    const graphqlSchema = sanitizeSchema(
+      await getSchema(schemas.map((s) => join(process.cwd(), s)))
     );
 
     log(
