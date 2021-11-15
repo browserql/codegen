@@ -175,7 +175,7 @@ function sanitizeSchema(source) {
                 var _a = (0, graphql_1.parse)(source), definitions = _a.definitions, doc = __rest(_a, ["definitions"]);
                 var nextDefs = definitions.map(function (def) {
                     if (def.kind === 'ObjectTypeDefinition' && def.name.value === type_1) {
-                        return __assign(__assign({}, def), { kind: 'ObjectTypeExtensionDefinition' });
+                        return __assign(__assign({}, def), { kind: 'ObjectTypeExtension' });
                     }
                     return def;
                 });

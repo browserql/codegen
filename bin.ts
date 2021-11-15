@@ -78,7 +78,7 @@ function sanitizeSchema(source: string): string {
           if (def.kind === 'ObjectTypeDefinition' && def.name.value === type) {
             return {
               ...def,
-              kind: 'ObjectTypeExtensionDefinition' as Kind.INTERFACE_TYPE_DEFINITION,
+              kind: 'ObjectTypeExtension' as Kind.INTERFACE_TYPE_DEFINITION,
             };
           }
           return def;
