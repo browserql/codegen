@@ -74,12 +74,17 @@ function sanitizeSchema(source: string): string {
       if (extendError.test(error.message)) {
         const type = error.message.replace(extendError, '$1');
         const { definitions, ...doc } = parse(source);
+        let found = false;
         const nextDefs: DefinitionNode[] = definitions.map((def) => {
           if (def.kind === 'ObjectTypeDefinition' && def.name.value === type) {
-            return {
-              ...def,
-              kind: 'ObjectTypeExtension' as Kind.INTERFACE_TYPE_DEFINITION,
-            };
+            if (!found) {
+              found = true;
+            } else {
+              return {
+                ...def,
+                kind: 'ObjectTypeExtension' as Kind.INTERFACE_TYPE_DEFINITION,
+              };
+            }
           }
           return def;
         });

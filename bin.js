@@ -173,9 +173,15 @@ function sanitizeSchema(source) {
             if (extendError.test(error.message)) {
                 var type_1 = error.message.replace(extendError, '$1');
                 var _a = (0, graphql_1.parse)(source), definitions = _a.definitions, doc = __rest(_a, ["definitions"]);
+                var found_1 = false;
                 var nextDefs = definitions.map(function (def) {
                     if (def.kind === 'ObjectTypeDefinition' && def.name.value === type_1) {
-                        return __assign(__assign({}, def), { kind: 'ObjectTypeExtension' });
+                        if (!found_1) {
+                            found_1 = true;
+                        }
+                        else {
+                            return __assign(__assign({}, def), { kind: 'ObjectTypeExtension' });
+                        }
                     }
                     return def;
                 });
