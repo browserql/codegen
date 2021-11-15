@@ -6,6 +6,7 @@ import { join } from 'path';
 import { promisify } from 'util';
 import { handleError } from './handleError';
 import { Log, log, resetLog } from './log';
+import { version } from './package.json';
 
 interface Config {
   schema: string | string[];
@@ -107,6 +108,8 @@ async function codegen(
     const config = await getConfigFile(configFile);
     const { schema, generates, afterAll } = config;
     const schemas = Array.isArray(schema) ? schema : [schema];
+
+    log(Log.VERBOSE, `Using codegen v${version}`);
 
     log(
       Log.VERBOSE,

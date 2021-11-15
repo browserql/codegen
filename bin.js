@@ -75,6 +75,7 @@ var path_1 = require("path");
 var util_1 = require("util");
 var handleError_1 = require("./handleError");
 var log_1 = require("./log");
+var package_json_1 = require("./package.json");
 function getConfigFile(configFile) {
     return __awaiter(this, void 0, void 0, function () {
         var stats, source, json, error_1;
@@ -207,6 +208,7 @@ function codegen(configFile) {
                     config = _a.sent();
                     schema = config.schema, generates = config.generates, afterAll = config.afterAll;
                     schemas = Array.isArray(schema) ? schema : [schema];
+                    (0, log_1.log)(log_1.Log.VERBOSE, "Using codegen v" + package_json_1.version);
                     (0, log_1.log)(log_1.Log.VERBOSE, "Scanning for GraphQL files " + JSON.stringify(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); })));
                     (0, log_1.log)(log_1.Log.INFO, '# GraphQL files\n');
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
