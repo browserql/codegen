@@ -1,5 +1,16 @@
 #! /usr/bin/env node
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,6 +47,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -48,6 +70,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var child_process_1 = require("child_process");
 var promises_1 = require("fs/promises");
+var graphql_1 = require("graphql");
 var path_1 = require("path");
 var util_1 = require("util");
 var handleError_1 = require("./handleError");
@@ -80,44 +103,6 @@ function getConfigFile(configFile) {
                     error_1 = _a.sent();
                     throw new Error('Can not find config file');
                 case 4: return [2 /*return*/];
-            }
-        });
-    });
-}
-function findGraphqlFiles(dir) {
-    return __awaiter(this, void 0, void 0, function () {
-        var files, graphqlFiles;
-        var _this = this;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, promises_1.readdir)(dir)];
-                case 1:
-                    files = _a.sent();
-                    graphqlFiles = [];
-                    return [4 /*yield*/, Promise.all(files.map(function (file) { return __awaiter(_this, void 0, void 0, function () {
-                            var stats, results;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        if (!/\.graphql$/.test(file)) return [3 /*break*/, 1];
-                                        graphqlFiles.push((0, path_1.join)(dir, file));
-                                        return [3 /*break*/, 4];
-                                    case 1: return [4 /*yield*/, (0, promises_1.stat)((0, path_1.join)(dir, file))];
-                                    case 2:
-                                        stats = _a.sent();
-                                        if (!stats.isDirectory()) return [3 /*break*/, 4];
-                                        return [4 /*yield*/, findGraphqlFiles((0, path_1.join)(dir, file))];
-                                    case 3:
-                                        results = _a.sent();
-                                        graphqlFiles.push.apply(graphqlFiles, results);
-                                        _a.label = 4;
-                                    case 4: return [2 /*return*/];
-                                }
-                            });
-                        }); }))];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/, graphqlFiles];
             }
         });
     });
@@ -176,10 +161,34 @@ function getSchema(sources) {
         });
     });
 }
+var extendError = /"There can be only one type named "(.+)"\.$/;
+function sanitizeSchema(source) {
+    console.log(source);
+    try {
+        (0, graphql_1.buildSchema)(source);
+        return source;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            if (extendError.test(error.message)) {
+                var type_1 = error.message.replace(extendError, '$1');
+                var _a = (0, graphql_1.parse)(source), definitions = _a.definitions, doc = __rest(_a, ["definitions"]);
+                var nextDefs = definitions.map(function (def) {
+                    if (def.kind === 'ObjectTypeDefinition' && def.name.value === type_1) {
+                        return __assign(__assign({}, def), { kind: 'ObjectTypeExtensionDefinition' });
+                    }
+                    return def;
+                });
+                return sanitizeSchema((0, graphql_1.print)(__assign(__assign({}, doc), { definitions: nextDefs })));
+            }
+        }
+        throw error;
+    }
+}
 function codegen(configFile) {
     if (configFile === void 0) { configFile = (0, path_1.join)(process.cwd(), 'codegen.json'); }
     return __awaiter(this, void 0, void 0, function () {
-        var config, schema, generates, afterAll, schemas, graphqlSchema_1, _loop_1, _i, generates_1, generate, error_2;
+        var config, schema, generates, afterAll, schemas, all, sanitized, graphqlSchema_1, _loop_1, _i, generates_1, generate, error_2;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -197,8 +206,10 @@ function codegen(configFile) {
                     (0, log_1.log)(log_1.Log.INFO, '# GraphQL files\n');
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 3:
-                    graphqlSchema_1 = _a.sent();
-                    (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema_1 + "\n```");
+                    all = _a.sent();
+                    sanitized = sanitizeSchema(all);
+                    graphqlSchema_1 = "# My\n\n" + sanitized;
+                    (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\nhello\n```");
                     if (!graphqlSchema_1) {
                         throw new Error('Schema is empty!');
                     }
