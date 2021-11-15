@@ -209,7 +209,7 @@ function codegen(configFile) {
                     all = _a.sent();
                     sanitized = sanitizeSchema(all);
                     graphqlSchema_1 = "# My\n\n" + sanitized;
-                    (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\nhello\n```");
+                    (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\nHELLO\n```");
                     if (!graphqlSchema_1) {
                         throw new Error('Schema is empty!');
                     }

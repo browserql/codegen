@@ -124,7 +124,7 @@ async function codegen(
       `## Schema
 
 \`\`\`graphql
-hello
+HELLO
 \`\`\``
     );
 
