@@ -122,6 +122,10 @@ async function codegen(
 
     const all = await getSchema(schemas.map((s) => join(process.cwd(), s)));
 
+    if (!all) {
+      throw new Error('Schema is empty!');
+    }
+
     const sanitized = sanitizeSchema(all);
 
     const graphqlSchema = sanitized;
@@ -134,10 +138,6 @@ async function codegen(
 ${graphqlSchema}
 \`\`\``
     );
-
-    if (!graphqlSchema) {
-      throw new Error('Schema is empty!');
-    }
 
     for (const generate of generates) {
       const {

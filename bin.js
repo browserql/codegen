@@ -214,12 +214,12 @@ function codegen(configFile) {
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }))];
                 case 3:
                     all = _a.sent();
+                    if (!all) {
+                        throw new Error('Schema is empty!');
+                    }
                     sanitized = sanitizeSchema(all);
                     graphqlSchema_1 = sanitized;
                     (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema_1 + "\n```");
-                    if (!graphqlSchema_1) {
-                        throw new Error('Schema is empty!');
-                    }
                     _loop_1 = function (generate) {
                         var file, handler, _b, executable, after, _c, args, output, _d, contents, posts;
                         return __generator(this, function (_e) {
