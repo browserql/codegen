@@ -9,9 +9,9 @@
     graphql "^16.0.1"
     semver "^7.3.5"
 
-"@browserql/merge-schemas@browserql/merge-schemas#v1.0.9":
-  version "1.0.9"
-  resolved "https://codeload.github.com/browserql/merge-schemas/tar.gz/a5cdd37e76cb76df6d00216bb4d5961ef2e8f2bc"
+"@browserql/merge-schemas@browserql/merge-schemas#v1.0.11":
+  version "1.0.11"
+  resolved "https://codeload.github.com/browserql/merge-schemas/tar.gz/0c3323be9ea900cdc1182adb306fabbbfcdfe921"
   dependencies:
     graphql "^16.0.1"
     semver "^7.3.5"
