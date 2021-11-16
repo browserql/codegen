@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@browserql/merge-schemas@browserql/merge-schemas#v1.0.14":
-  version "1.0.14"
-  resolved "https://codeload.github.com/browserql/merge-schemas/tar.gz/5ef5ffaa40efce934161d28064b1ebdfa633f8f9"
+"@browserql/merge-schemas@browserql/merge-schemas#v1.0.15":
+  version "1.0.15"
+  resolved "https://codeload.github.com/browserql/merge-schemas/tar.gz/eae15c39c855d0f847948fb71943f0ac57935542"
   dependencies:
     graphql "^16.0.1"
     semver "^7.3.5"
