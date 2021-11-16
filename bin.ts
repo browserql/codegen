@@ -132,8 +132,8 @@ ${graphqlSchema}
 
         const ps = spawn(exec, [
           ...execs,
-          // join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
-          join(process.cwd(), '../handler.js'),
+          join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
+          // join(process.cwd(), '../handler.js'),
           handler,
           graphqlSchema,
           JSON.stringify(args),

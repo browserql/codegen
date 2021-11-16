@@ -184,8 +184,8 @@ function codegen(configFile) {
                                                 all = [];
                                                 _a = executable.split(/\s+/), exec = _a[0], execs = _a.slice(1);
                                                 ps = (0, child_process_1.spawn)(exec, __spreadArray(__spreadArray([], execs, true), [
-                                                    // join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
-                                                    (0, path_1.join)(process.cwd(), '../handler.js'),
+                                                    (0, path_1.join)(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
+                                                    // join(process.cwd(), '../handler.js'),
                                                     handler,
                                                     graphqlSchema_1,
                                                     JSON.stringify(args),
