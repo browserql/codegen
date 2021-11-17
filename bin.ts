@@ -159,14 +159,14 @@ ${graphqlSchema}
 
       await Promise.all(
         posts.map(async (post) => {
-          // const [afterExecutable, ...afterArgs] = join(
-          //   process.cwd(),
-          //   post
-          // ).split('s');
-          // await spawnify(afterExecutable, [
-          //   ...afterArgs,
-          //   join(process.cwd(), file),
-          // ]);
+          const [afterExecutable, ...afterArgs] = join(
+            process.cwd(),
+            post
+          ).split(/\s+/);
+          await spawnify(afterExecutable, [
+            ...afterArgs,
+            join(process.cwd(), file),
+          ]);
         })
       );
     }
