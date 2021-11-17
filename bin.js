@@ -46,14 +46,13 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var child_process_1 = require("child_process");
+var merge_schemas_1 = require("@browserql/merge-schemas");
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
-var util_1 = require("util");
 var handleError_1 = require("./handleError");
 var log_1 = require("./log");
 var package_json_1 = require("./package.json");
-var merge_schemas_1 = require("@browserql/merge-schemas");
+var spawnify_1 = require("./spawnify");
 function getConfigFile(configFile) {
     return __awaiter(this, void 0, void 0, function () {
         var stats, source, json, error_1;
@@ -143,7 +142,7 @@ function getSchema(sources) {
 function codegen(configFile) {
     if (configFile === void 0) { configFile = (0, path_1.join)(process.cwd(), 'codegen.json'); }
     return __awaiter(this, void 0, void 0, function () {
-        var config, schema, generates, afterAll, schemas, all, sanitized, graphqlSchema_1, _loop_1, _i, generates_1, generate, error_2;
+        var config, schema, generates, afterAll, schemas, all, sanitized, graphqlSchema, _loop_1, _i, generates_1, generate, error_2;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -167,64 +166,39 @@ function codegen(configFile) {
                         throw new Error('Schema is empty!');
                     }
                     sanitized = (0, merge_schemas_1.sanitizeSchema)(all);
-                    graphqlSchema_1 = sanitized;
-                    (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema_1 + "\n```");
+                    graphqlSchema = sanitized;
+                    (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema + "\n```");
                     _loop_1 = function (generate) {
-                        var file, handler, _b, executable, after, _c, args, output, _d, contents, posts;
-                        return __generator(this, function (_e) {
-                            switch (_e.label) {
+                        var file, handler, _b, executable, after, _c, args, _d, exec, execs, output, _e, contents, posts;
+                        return __generator(this, function (_f) {
+                            switch (_f.label) {
                                 case 0:
                                     file = generate.file, handler = generate.handler, _b = generate.executable, executable = _b === void 0 ? 'node' : _b, after = generate.after, _c = generate.arguments, args = _c === void 0 ? {} : _c;
                                     (0, log_1.log)(log_1.Log.VERBOSE, "## Generating file " + file + " with handler " + handler + " (arguments: " + JSON.stringify(args) + ", executable: " + executable + ")");
                                     (0, log_1.log)(log_1.Log.VERBOSE, "  -- (arguments: " + JSON.stringify(args) + ", executable: " + executable + ")");
-                                    return [4 /*yield*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                                            var out, all, _a, exec, execs, ps;
-                                            return __generator(this, function (_b) {
-                                                out = [];
-                                                all = [];
-                                                _a = executable.split(/\s+/), exec = _a[0], execs = _a.slice(1);
-                                                ps = (0, child_process_1.spawn)(exec, __spreadArray(__spreadArray([], execs, true), [
-                                                    (0, path_1.join)(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
-                                                    // join(process.cwd(), '../handler.js'),
-                                                    handler,
-                                                    graphqlSchema_1,
-                                                    JSON.stringify(args),
-                                                ], false));
-                                                ps.on('error', reject);
-                                                ps.on('close', function (status) {
-                                                    if (status === 0) {
-                                                        out.shift();
-                                                        resolve(out.join('\n'));
-                                                    }
-                                                    else {
-                                                        reject(new Error("Got unexpected status " + status + ": " + all.join('\n')));
-                                                    }
-                                                });
-                                                ps.stdout.on('data', function (data) {
-                                                    out.push(data.toString());
-                                                    all.push(data.toString());
-                                                });
-                                                ps.stderr.on('data', function (data) {
-                                                    all.push(data.toString());
-                                                });
-                                                return [2 /*return*/];
-                                            });
-                                        }); })];
+                                    _d = executable.split(/\s+/), exec = _d[0], execs = _d.slice(1);
+                                    return [4 /*yield*/, (0, spawnify_1.spawnify)(exec, __spreadArray(__spreadArray([], execs, true), [
+                                            (0, path_1.join)(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
+                                            // join(process.cwd(), '../handler.js'),
+                                            handler,
+                                            graphqlSchema,
+                                            JSON.stringify(args),
+                                        ], false))];
                                 case 1:
-                                    output = _e.sent();
+                                    output = _f.sent();
                                     (0, log_1.log)(log_1.Log.INFO, "### Output\n\n```\n" + output.slice(0, 255) + " ...\n```\n");
                                     if (!output) return [3 /*break*/, 3];
-                                    _d = output.split('======= codegen ======='), contents = _d[1];
+                                    _e = output.split('======= codegen ======='), contents = _e[1];
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), contents)];
                                 case 2:
-                                    _e.sent();
+                                    _f.sent();
                                     return [3 /*break*/, 5];
                                 case 3:
                                     (0, log_1.log)(log_1.Log.WARNING, '## Output is empty!');
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), '')];
                                 case 4:
-                                    _e.sent();
-                                    _e.label = 5;
+                                    _f.sent();
+                                    _f.label = 5;
                                 case 5:
                                     posts = [];
                                     if (after) {
@@ -234,17 +208,22 @@ function codegen(configFile) {
                                         posts.push.apply(posts, (Array.isArray(afterAll) ? afterAll : [afterAll]));
                                     }
                                     return [4 /*yield*/, Promise.all(posts.map(function (post) { return __awaiter(_this, void 0, void 0, function () {
-                                            return __generator(this, function (_a) {
-                                                switch (_a.label) {
-                                                    case 0: return [4 /*yield*/, (0, util_1.promisify)(child_process_1.exec)((0, path_1.join)(process.cwd(), post) + " " + (0, path_1.join)(process.cwd(), file))];
+                                            var _a, afterExecutable, afterArgs;
+                                            return __generator(this, function (_b) {
+                                                switch (_b.label) {
+                                                    case 0:
+                                                        _a = (0, path_1.join)(process.cwd(), post).split('s'), afterExecutable = _a[0], afterArgs = _a.slice(1);
+                                                        return [4 /*yield*/, (0, spawnify_1.spawnify)(afterExecutable, __spreadArray(__spreadArray([], afterArgs, true), [
+                                                                (0, path_1.join)(process.cwd(), file),
+                                                            ], false))];
                                                     case 1:
-                                                        _a.sent();
+                                                        _b.sent();
                                                         return [2 /*return*/];
                                                 }
                                             });
                                         }); }))];
                                 case 6:
-                                    _e.sent();
+                                    _f.sent();
                                     return [2 /*return*/];
                             }
                         });

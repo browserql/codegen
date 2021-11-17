@@ -1,13 +1,11 @@
 #! /usr/bin/env node
-import { exec, spawn } from 'child_process';
+import { sanitizeSchema } from '@browserql/merge-schemas';
 import { readdir, readFile, stat, writeFile } from 'fs/promises';
-import { buildSchema, parse, DefinitionNode, Kind, print } from 'graphql';
 import { join } from 'path';
-import { promisify } from 'util';
 import { handleError } from './handleError';
 import { Log, log, resetLog } from './log';
 import { version } from './package.json';
-import { sanitizeSchema } from '@browserql/merge-schemas';
+import { spawnify } from './spawnify';
 
 interface Config {
   schema: string | string[];
@@ -124,43 +122,16 @@ ${graphqlSchema}
         `  -- (arguments: ${JSON.stringify(args)}, executable: ${executable})`
       );
 
-      const output: string = await new Promise(async (resolve, reject) => {
-        const out: string[] = [];
-        const all: string[] = [];
+      const [exec, ...execs] = executable.split(/\s+/);
 
-        const [exec, ...execs] = executable.split(/\s+/);
-
-        const ps = spawn(exec, [
-          ...execs,
-          join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
-          // join(process.cwd(), '../handler.js'),
-          handler,
-          graphqlSchema,
-          JSON.stringify(args),
-        ]);
-
-        ps.on('error', reject);
-
-        ps.on('close', (status) => {
-          if (status === 0) {
-            out.shift();
-            resolve(out.join('\n'));
-          } else {
-            reject(
-              new Error(`Got unexpected status ${status}: ${all.join('\n')}`)
-            );
-          }
-        });
-
-        ps.stdout.on('data', (data) => {
-          out.push(data.toString());
-          all.push(data.toString());
-        });
-
-        ps.stderr.on('data', (data) => {
-          all.push(data.toString());
-        });
-      });
+      const output = await spawnify(exec, [
+        ...execs,
+        join(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
+        // join(process.cwd(), '../handler.js'),
+        handler,
+        graphqlSchema,
+        JSON.stringify(args),
+      ]);
 
       log(
         Log.INFO,
@@ -188,9 +159,15 @@ ${graphqlSchema}
 
       await Promise.all(
         posts.map(async (post) => {
-          await promisify(exec)(
-            `${join(process.cwd(), post)} ${join(process.cwd(), file)}`
-          );
+          const [afterExecutable, ...afterArgs] = join(
+            process.cwd(),
+            post
+          ).split('s');
+
+          await spawnify(afterExecutable, [
+            ...afterArgs,
+            join(process.cwd(), file),
+          ]);
         })
       );
     }
