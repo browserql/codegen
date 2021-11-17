@@ -9,6 +9,13 @@
     graphql "^16.0.1"
     semver "^7.3.5"
 
+"@browserql/merge-schemas@browserql/merge-schemas#v1.0.17":
+  version "1.0.17"
+  resolved "https://codeload.github.com/browserql/merge-schemas/tar.gz/e71324003287ec8784bc2d7a34d838b6083b3f24"
+  dependencies:
+    graphql "^16.0.1"
+    semver "^7.3.5"
+
 "@types/node@^16.11.7":
   version "16.11.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.7.tgz#36820945061326978c42a01e56b61cd223dfdc42"
