@@ -35,7 +35,7 @@ async function run(commitMessage) {
 
   await promisify(exec)('git add .');
 
-  await promisify(exec)(`git commit -am "${nextBranch}"`);
+  await promisify(exec)(`git commit --allow-empty -am "${nextBranch}"`);
 
   await promisify(exec)(`git push --set-upstream origin ${nextBranch}`);
 
@@ -45,7 +45,7 @@ async function run(commitMessage) {
 
   await promisify(exec)('git add .');
 
-  await promisify(exec)(`git commit -am "${minorBranch}"`);
+  await promisify(exec)(`git commit --allow-empty -am "${minorBranch}"`);
 
   await promisify(exec)(`git push origin ${minorBranch}`);
 
@@ -55,7 +55,7 @@ async function run(commitMessage) {
 
   await promisify(exec)('git add .');
 
-  await promisify(exec)(`git commit -am "${majorBranch}"`);
+  await promisify(exec)(`git commit --allow-empty -am "${majorBranch}"`);
 
   await promisify(exec)(`git push origin ${majorBranch}`);
 
