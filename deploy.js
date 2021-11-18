@@ -23,9 +23,11 @@ async function run(commitMessage) {
     )
   );
 
-  const nextSemver = semverParse(nextBranch);
+  const { major, minor, patch } = semverParse(nextBranch);
 
-  console.log(nextSemver);
+  const majorBranch = `v${major}`;
+
+  const minorBranch = `v${major}.${minor}`;
 
   await promisify(exec)(`git checkout -b ${nextBranch}`);
 
@@ -37,7 +39,25 @@ async function run(commitMessage) {
 
   await promisify(exec)(`git push --set-upstream origin ${nextBranch}`);
 
-  // await promisify(exec)(`git checkout`);
+  await promisify(exec)(`git checkout ${minorBranch}`);
+
+  await promisify(exec)(`git merge ${nextBranch}`);
+
+  await promisify(exec)('git add .');
+
+  await promisify(exec)(`git commit -am "${minorBranch}"`);
+
+  await promisify(exec)(`git push origin ${minorBranch}`);
+
+  await promisify(exec)(`git checkout ${majorBranch}`);
+
+  await promisify(exec)(`git merge ${minorBranch}`);
+
+  await promisify(exec)('git add .');
+
+  await promisify(exec)(`git commit -am "${majorBranch}"`);
+
+  await promisify(exec)(`git push origin ${majorBranch}`);
 
   console.log(nextBranch);
 }
