@@ -9,6 +9,7 @@ import { spawnify } from './spawnify';
 
 interface Config {
   schema: string | string[];
+  exclude?: string | string[];
   afterAll?: string | string[];
   generates: {
     file: string;
@@ -38,7 +39,10 @@ async function getConfigFile(configFile: string) {
   }
 }
 
-async function getSchema(sources: string[]): Promise<string> {
+async function getSchema(
+  sources: string[],
+  exclude: string[]
+): Promise<string> {
   const strings: string[] = [];
 
   await Promise.all(
@@ -48,8 +52,11 @@ async function getSchema(sources: string[]): Promise<string> {
         files.map(async (file) => {
           const stats = await stat(join(source, file));
           if (stats.isDirectory()) {
-            strings.push(await getSchema([join(source, file)]));
-          } else if (/\.g(raph)?ql$/.test(file)) {
+            strings.push(await getSchema([join(source, file)], exclude));
+          } else if (
+            /\.g(raph)?ql$/.test(file) &&
+            exclude.every((p) => !new RegExp(p).test(file))
+          ) {
             log(Log.INFO, `- ${join(source, file)}`);
             const src = await readFile(join(source, file));
             strings.push(src.toString());
@@ -82,7 +89,14 @@ async function codegen(
 
     log(Log.INFO, '# GraphQL files\n');
 
-    const all = await getSchema(schemas.map((s) => join(process.cwd(), s)));
+    const { exclude = [] } = config;
+
+    const excludes = Array.isArray(exclude) ? exclude : [exclude];
+
+    const all = await getSchema(
+      schemas.map((s) => join(process.cwd(), s)),
+      excludes
+    );
 
     if (!all) {
       throw new Error('Schema is empty!');
