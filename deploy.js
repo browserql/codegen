@@ -2,6 +2,7 @@ const { exec } = require('child_process');
 const { readFile, writeFile } = require('fs/promises');
 const { promisify } = require('util');
 const semverInc = require('semver/functions/inc');
+const semverParse = require('semver/functions/parse');
 
 async function run(commitMessage) {
   const pkg = JSON.parse((await readFile('package.json')).toString());
@@ -22,6 +23,10 @@ async function run(commitMessage) {
     )
   );
 
+  const nextSemver = semverParse(nextBranch);
+
+  console.log(nextSemver);
+
   await promisify(exec)(`git checkout -b ${nextBranch}`);
 
   await promisify(exec)('yarn build');
@@ -31,6 +36,8 @@ async function run(commitMessage) {
   await promisify(exec)(`git commit -am "${nextBranch}"`);
 
   await promisify(exec)(`git push --set-upstream origin ${nextBranch}`);
+
+  // await promisify(exec)(`git checkout`);
 
   console.log(nextBranch);
 }
