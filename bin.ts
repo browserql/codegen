@@ -190,6 +190,7 @@ ${graphqlSchema}
       Log.ERROR,
       `${(error as Error).message}\n\n${(error as Error).stack || ''}`
     );
+    throw error;
   }
 }
 

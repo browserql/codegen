@@ -248,7 +248,7 @@ function codegen(configFile) {
                     error_2 = _b.sent();
                     (0, handleError_1.handleError)(error_2);
                     (0, log_1.log)(log_1.Log.ERROR, error_2.message + "\n\n" + (error_2.stack || ''));
-                    return [3 /*break*/, 9];
+                    throw error_2;
                 case 9: return [2 /*return*/];
             }
         });
