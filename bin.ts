@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 import { sanitizeSchema } from '@browserql/merge-schemas';
+import { createWriteStream } from 'fs';
 import { readdir, readFile, stat, writeFile } from 'fs/promises';
 import { join } from 'path';
 import { handleError } from './handleError';
@@ -155,7 +156,19 @@ ${graphqlSchema}
       if (output) {
         const [, contents] = output.split('======= codegen =======');
 
-        await writeFile(join(process.cwd(), file), contents);
+        const writeStream = createWriteStream(join(process.cwd(), file));
+
+        const lines = contents.split('\n');
+
+        while (lines.length) {
+          writeStream.write(lines.shift(), 'utf-8');
+        }
+
+        await new Promise((resolve) => {
+          writeStream.on('finish', resolve);
+        });
+
+        // await writeFile(join(process.cwd(), file), contents);
       } else {
         log(Log.WARNING, '## Output is empty!');
         await writeFile(join(process.cwd(), file), '');

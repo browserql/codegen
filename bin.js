@@ -47,6 +47,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var merge_schemas_1 = require("@browserql/merge-schemas");
+var fs_1 = require("fs");
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
 var handleError_1 = require("./handleError");
@@ -172,7 +173,7 @@ function codegen(configFile) {
                     graphqlSchema = sanitized;
                     (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema + "\n```");
                     _loop_1 = function (generate) {
-                        var file, handler, _c, executable, after, _d, args, _e, exec, execs, output, _f, contents, posts;
+                        var file, handler, _c, executable, after, _d, args, _e, exec, execs, output, _f, contents, writeStream_1, lines, posts;
                         return __generator(this, function (_g) {
                             switch (_g.label) {
                                 case 0:
@@ -192,7 +193,14 @@ function codegen(configFile) {
                                     (0, log_1.log)(log_1.Log.INFO, "### Output\n\n```\n" + output.slice(0, 255) + " ...\n```\n");
                                     if (!output) return [3 /*break*/, 3];
                                     _f = output.split('======= codegen ======='), contents = _f[1];
-                                    return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), contents)];
+                                    writeStream_1 = (0, fs_1.createWriteStream)((0, path_1.join)(process.cwd(), file));
+                                    lines = contents.split('\n');
+                                    while (lines.length) {
+                                        writeStream_1.write(lines.shift(), 'utf-8');
+                                    }
+                                    return [4 /*yield*/, new Promise(function (resolve) {
+                                            writeStream_1.on('finish', resolve);
+                                        })];
                                 case 2:
                                     _g.sent();
                                     return [3 /*break*/, 5];
