@@ -160,8 +160,14 @@ ${graphqlSchema}
 
         const lines = contents.split('\n');
 
+        let i = 0;
+
         while (lines.length) {
           writeStream.write(lines.shift()?.concat('\n'), 'utf-8');
+          if (i % 1000 === 0) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
+          i++;
         }
 
         writeStream.end();

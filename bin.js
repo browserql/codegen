@@ -174,7 +174,7 @@ function codegen(configFile) {
                     graphqlSchema = sanitized;
                     (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema + "\n```");
                     _loop_1 = function (generate) {
-                        var file, handler, _d, executable, after, _e, args, _f, exec, execs, output, _g, contents, writeStream, lines, posts;
+                        var file, handler, _d, executable, after, _e, args, _f, exec, execs, output, _g, contents, writeStream, lines, i, posts;
                         return __generator(this, function (_h) {
                             switch (_h.label) {
                                 case 0:
@@ -192,22 +192,33 @@ function codegen(configFile) {
                                 case 1:
                                     output = _h.sent();
                                     (0, log_1.log)(log_1.Log.INFO, "### Output\n\n```\n" + output.slice(0, 255) + " ...\n```\n");
-                                    if (!output) return [3 /*break*/, 2];
+                                    if (!output) return [3 /*break*/, 6];
                                     _g = output.split('======= codegen ======='), contents = _g[1];
                                     writeStream = (0, fs_1.createWriteStream)((0, path_1.join)(process.cwd(), file));
                                     lines = contents.split('\n');
-                                    while (lines.length) {
-                                        writeStream.write((_a = lines.shift()) === null || _a === void 0 ? void 0 : _a.concat('\n'), 'utf-8');
-                                    }
-                                    writeStream.end();
-                                    return [3 /*break*/, 4];
+                                    i = 0;
+                                    _h.label = 2;
                                 case 2:
-                                    (0, log_1.log)(log_1.Log.WARNING, '## Output is empty!');
-                                    return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), '')];
+                                    if (!lines.length) return [3 /*break*/, 5];
+                                    writeStream.write((_a = lines.shift()) === null || _a === void 0 ? void 0 : _a.concat('\n'), 'utf-8');
+                                    if (!(i % 1000 === 0)) return [3 /*break*/, 4];
+                                    return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 100); })];
                                 case 3:
                                     _h.sent();
                                     _h.label = 4;
                                 case 4:
+                                    i++;
+                                    return [3 /*break*/, 2];
+                                case 5:
+                                    writeStream.end();
+                                    return [3 /*break*/, 8];
+                                case 6:
+                                    (0, log_1.log)(log_1.Log.WARNING, '## Output is empty!');
+                                    return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), '')];
+                                case 7:
+                                    _h.sent();
+                                    _h.label = 8;
+                                case 8:
                                     posts = [];
                                     if (after) {
                                         posts.push.apply(posts, (Array.isArray(after) ? after : [after]));
@@ -230,7 +241,7 @@ function codegen(configFile) {
                                                 }
                                             });
                                         }); }))];
-                                case 5:
+                                case 9:
                                     _h.sent();
                                     return [2 /*return*/];
                             }
