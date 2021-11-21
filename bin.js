@@ -142,30 +142,31 @@ function getSchema(sources, exclude) {
     });
 }
 function codegen(configFile) {
+    var _a;
     if (configFile === void 0) { configFile = (0, path_1.join)(process.cwd(), 'codegen.json'); }
     return __awaiter(this, void 0, void 0, function () {
-        var config, schema, generates, afterAll, schemas, _a, exclude, excludes, all, sanitized, graphqlSchema, _loop_1, _i, generates_1, generate, error_2;
+        var config, schema, generates, afterAll, schemas, _b, exclude, excludes, all, sanitized, graphqlSchema, _loop_1, _i, generates_1, generate, error_2;
         var _this = this;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _b.trys.push([0, 8, , 9]);
+                    _c.trys.push([0, 8, , 9]);
                     return [4 /*yield*/, (0, log_1.resetLog)()];
                 case 1:
-                    _b.sent();
+                    _c.sent();
                     return [4 /*yield*/, getConfigFile(configFile)];
                 case 2:
-                    config = _b.sent();
+                    config = _c.sent();
                     schema = config.schema, generates = config.generates, afterAll = config.afterAll;
                     schemas = Array.isArray(schema) ? schema : [schema];
                     (0, log_1.log)(log_1.Log.VERBOSE, "Using codegen v" + package_json_1.version);
                     (0, log_1.log)(log_1.Log.VERBOSE, "Scanning for GraphQL files " + JSON.stringify(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); })));
                     (0, log_1.log)(log_1.Log.INFO, '# GraphQL files\n');
-                    _a = config.exclude, exclude = _a === void 0 ? [] : _a;
+                    _b = config.exclude, exclude = _b === void 0 ? [] : _b;
                     excludes = Array.isArray(exclude) ? exclude : [exclude];
                     return [4 /*yield*/, getSchema(schemas.map(function (s) { return (0, path_1.join)(process.cwd(), s); }), excludes)];
                 case 3:
-                    all = _b.sent();
+                    all = _c.sent();
                     if (!all) {
                         throw new Error('Schema is empty!');
                     }
@@ -173,14 +174,14 @@ function codegen(configFile) {
                     graphqlSchema = sanitized;
                     (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema + "\n```");
                     _loop_1 = function (generate) {
-                        var file, handler, _c, executable, after, _d, args, _e, exec, execs, output, _f, contents, writeStream, lines, posts;
-                        return __generator(this, function (_g) {
-                            switch (_g.label) {
+                        var file, handler, _d, executable, after, _e, args, _f, exec, execs, output, _g, contents, writeStream, lines, posts;
+                        return __generator(this, function (_h) {
+                            switch (_h.label) {
                                 case 0:
-                                    file = generate.file, handler = generate.handler, _c = generate.executable, executable = _c === void 0 ? 'node' : _c, after = generate.after, _d = generate.arguments, args = _d === void 0 ? {} : _d;
+                                    file = generate.file, handler = generate.handler, _d = generate.executable, executable = _d === void 0 ? 'node' : _d, after = generate.after, _e = generate.arguments, args = _e === void 0 ? {} : _e;
                                     (0, log_1.log)(log_1.Log.VERBOSE, "## Generating file " + file + " with handler " + handler + " (arguments: " + JSON.stringify(args) + ", executable: " + executable + ")");
                                     (0, log_1.log)(log_1.Log.VERBOSE, "  -- (arguments: " + JSON.stringify(args) + ", executable: " + executable + ")");
-                                    _e = executable.split(/\s+/), exec = _e[0], execs = _e.slice(1);
+                                    _f = executable.split(/\s+/), exec = _f[0], execs = _f.slice(1);
                                     return [4 /*yield*/, (0, spawnify_1.spawnify)(exec, __spreadArray(__spreadArray([], execs, true), [
                                             (0, path_1.join)(process.cwd(), './node_modules/@browserql/codegen/handler.js'),
                                             // join(process.cwd(), '../handler.js'),
@@ -189,14 +190,14 @@ function codegen(configFile) {
                                             JSON.stringify(args),
                                         ], false))];
                                 case 1:
-                                    output = _g.sent();
+                                    output = _h.sent();
                                     (0, log_1.log)(log_1.Log.INFO, "### Output\n\n```\n" + output.slice(0, 255) + " ...\n```\n");
                                     if (!output) return [3 /*break*/, 2];
-                                    _f = output.split('======= codegen ======='), contents = _f[1];
+                                    _g = output.split('======= codegen ======='), contents = _g[1];
                                     writeStream = (0, fs_1.createWriteStream)((0, path_1.join)(process.cwd(), file));
                                     lines = contents.split('\n');
                                     while (lines.length) {
-                                        writeStream.write(lines.shift(), 'utf-8');
+                                        writeStream.write((_a = lines.shift()) === null || _a === void 0 ? void 0 : _a.concat('\n'), 'utf-8');
                                     }
                                     writeStream.end();
                                     return [3 /*break*/, 4];
@@ -204,8 +205,8 @@ function codegen(configFile) {
                                     (0, log_1.log)(log_1.Log.WARNING, '## Output is empty!');
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), '')];
                                 case 3:
-                                    _g.sent();
-                                    _g.label = 4;
+                                    _h.sent();
+                                    _h.label = 4;
                                 case 4:
                                     posts = [];
                                     if (after) {
@@ -230,26 +231,26 @@ function codegen(configFile) {
                                             });
                                         }); }))];
                                 case 5:
-                                    _g.sent();
+                                    _h.sent();
                                     return [2 /*return*/];
                             }
                         });
                     };
                     _i = 0, generates_1 = generates;
-                    _b.label = 4;
+                    _c.label = 4;
                 case 4:
                     if (!(_i < generates_1.length)) return [3 /*break*/, 7];
                     generate = generates_1[_i];
                     return [5 /*yield**/, _loop_1(generate)];
                 case 5:
-                    _b.sent();
-                    _b.label = 6;
+                    _c.sent();
+                    _c.label = 6;
                 case 6:
                     _i++;
                     return [3 /*break*/, 4];
                 case 7: return [3 /*break*/, 9];
                 case 8:
-                    error_2 = _b.sent();
+                    error_2 = _c.sent();
                     (0, handleError_1.handleError)(error_2);
                     (0, log_1.log)(log_1.Log.ERROR, error_2.message + "\n\n" + (error_2.stack || ''));
                     throw error_2;

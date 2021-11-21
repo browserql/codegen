@@ -161,7 +161,7 @@ ${graphqlSchema}
         const lines = contents.split('\n');
 
         while (lines.length) {
-          writeStream.write(lines.shift(), 'utf-8');
+          writeStream.write(lines.shift()?.concat('\n'), 'utf-8');
         }
 
         writeStream.end();
