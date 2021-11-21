@@ -173,7 +173,7 @@ function codegen(configFile) {
                     graphqlSchema = sanitized;
                     (0, log_1.log)(log_1.Log.INFO, "## Schema\n\n```graphql\n" + graphqlSchema + "\n```");
                     _loop_1 = function (generate) {
-                        var file, handler, _c, executable, after, _d, args, _e, exec, execs, output, _f, contents, writeStream_1, lines, posts;
+                        var file, handler, _c, executable, after, _d, args, _e, exec, execs, output, _f, contents, writeStream, lines, posts;
                         return __generator(this, function (_g) {
                             switch (_g.label) {
                                 case 0:
@@ -191,26 +191,22 @@ function codegen(configFile) {
                                 case 1:
                                     output = _g.sent();
                                     (0, log_1.log)(log_1.Log.INFO, "### Output\n\n```\n" + output.slice(0, 255) + " ...\n```\n");
-                                    if (!output) return [3 /*break*/, 3];
+                                    if (!output) return [3 /*break*/, 2];
                                     _f = output.split('======= codegen ======='), contents = _f[1];
-                                    writeStream_1 = (0, fs_1.createWriteStream)((0, path_1.join)(process.cwd(), file));
+                                    writeStream = (0, fs_1.createWriteStream)((0, path_1.join)(process.cwd(), file));
                                     lines = contents.split('\n');
                                     while (lines.length) {
-                                        writeStream_1.write(lines.shift(), 'utf-8');
+                                        writeStream.write(lines.shift(), 'utf-8');
                                     }
-                                    return [4 /*yield*/, new Promise(function (resolve) {
-                                            writeStream_1.on('finish', resolve);
-                                        })];
+                                    writeStream.end();
+                                    return [3 /*break*/, 4];
                                 case 2:
-                                    _g.sent();
-                                    return [3 /*break*/, 5];
-                                case 3:
                                     (0, log_1.log)(log_1.Log.WARNING, '## Output is empty!');
                                     return [4 /*yield*/, (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), file), '')];
-                                case 4:
+                                case 3:
                                     _g.sent();
-                                    _g.label = 5;
-                                case 5:
+                                    _g.label = 4;
+                                case 4:
                                     posts = [];
                                     if (after) {
                                         posts.push.apply(posts, (Array.isArray(after) ? after : [after]));
@@ -233,7 +229,7 @@ function codegen(configFile) {
                                                 }
                                             });
                                         }); }))];
-                                case 6:
+                                case 5:
                                     _g.sent();
                                     return [2 /*return*/];
                             }

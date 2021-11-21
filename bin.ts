@@ -164,9 +164,7 @@ ${graphqlSchema}
           writeStream.write(lines.shift(), 'utf-8');
         }
 
-        await new Promise((resolve) => {
-          writeStream.on('finish', resolve);
-        });
+        writeStream.end();
 
         // await writeFile(join(process.cwd(), file), contents);
       } else {

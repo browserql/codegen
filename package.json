@@ -1,6 +1,6 @@
 {
   "name": "@browserql/codegen",
-  "version": "1.1.31",
+  "version": "1.1.32",
   "description": "GraphQL code generator",
   "main": "index.js",
   "repository": "https://github.com/browserql/codegen",
